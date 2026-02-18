@@ -49,7 +49,6 @@ final class TrackerRecordStore: NSObject {
         try? frc.performFetch()
     }
     
-    // MARK: - Public API для контроллера
     func fetchCompletedTrackers() -> [TrackerRecord] {
         let records = fetchedResultsController?.fetchedObjects ?? []
         return records.compactMap { record in
