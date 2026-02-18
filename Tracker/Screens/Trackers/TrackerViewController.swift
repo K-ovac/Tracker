@@ -8,7 +8,6 @@
 import UIKit
 
 final class TrackerViewController: UIViewController {
-    
     //MARK: Properties
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -16,6 +15,9 @@ final class TrackerViewController: UIViewController {
         formatter.dateFormat = "dd.MM.yy"
         return formatter
     }()
+    
+    private let trackerStore = TrackerStore()
+    private let trackerRecordStore = TrackerRecordStore()
     
     private let trackerView = TrackerView()
     private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "Важное",
@@ -39,6 +41,10 @@ final class TrackerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        trackerStore.delegate = self
+        trackerRecordStore.delegate = self
+        
         setupNavigationBar()
         trackerView.delegate = self
         trackerView.collectionView.dataSource = self
@@ -50,6 +56,8 @@ final class TrackerViewController: UIViewController {
             withReuseIdentifier: TrackerHeaderView.identifier
         )
         
+        loadTrackers()
+        loadRecords()
     }
     
     // MARK: Setup
@@ -82,25 +90,36 @@ final class TrackerViewController: UIViewController {
         for category in trackerCategories {
             let filteredTrackers = category.trackers.filter { tracker in
                 let isCorrectDay = tracker.schedule.contains(weekday)
-                let isAfterCreationDate =
-                calendar.startOfDay(for: date) >=
-                calendar.startOfDay(for: tracker.dayCreatedTracker)
-                
+                let isAfterCreationDate = calendar.startOfDay(for: date) >= calendar.startOfDay(for: tracker.dayCreatedTracker)
                 return isCorrectDay && isAfterCreationDate
             }
             
             if !filteredTrackers.isEmpty {
-                result.append(
-                    TrackerCategory(title: category.title,
-                                    trackers: filteredTrackers)
-                )
+                result.append(TrackerCategory(title: category.title, trackers: filteredTrackers))
             }
         }
         
         filteredCategories = result
+        endedTrackers = trackerRecordStore.fetchCompletedTrackers()
+        
         trackerView.collectionView.reloadData()
         trackerView.backStack.isHidden = !filteredCategories.isEmpty
         print("Отфильтрованные трекеры:", filteredTrackers.map { $0.name })
+    }
+    
+    private func loadTrackers() {
+        do {
+            let categories = try trackerStore.fetchTrackersByCategory()
+            self.trackerCategories = categories
+            filterTrackers(for: datePicker.date)
+        } catch {
+            print("Ошибка при загрузке трекеров:", error)
+        }
+    }
+    
+    private func loadRecords() {
+        endedTrackers = trackerRecordStore.fetchCompletedTrackers()
+        filterTrackers(for: datePicker.date)
     }
     
     // MARK: Actions NavBar
@@ -188,48 +207,56 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 // MARK: Ext TrackerCellDelegate
 extension TrackerViewController: TrackerCellDelegate {
     func didTrackerCellButtonTapped(_ cell: TrackerCell) {
-        print("Нажата кнопка выполнения трекера")
         guard let indexPath = trackerView.collectionView.indexPath(for: cell) else { return }
         let tracker = filteredCategories[indexPath.section].trackers[indexPath.row]
         let selectedDate = datePicker.date
-        let currentDay = Date()
-        
-        guard selectedDate <= currentDay else { return }
-        
         let calendar = Calendar.current
         
-        if let index = endedTrackers.firstIndex(where: {
-            $0.trackerId == tracker.id &&
-            calendar.isDate($0.date, inSameDayAs: selectedDate)
-        }) {
-            endedTrackers.remove(at: index)
-        } else {
-            endedTrackers.append(
-                TrackerRecord(trackerId: tracker.id, date: selectedDate)
-            )
+        let today = calendar.startOfDay(for: Date())
+        let dayToMark = calendar.startOfDay(for: selectedDate)
+        guard dayToMark <= today else { return }
+        do {
+            try trackerRecordStore.toggleRecord(for: tracker.id, on: selectedDate)
+            endedTrackers = trackerRecordStore.fetchCompletedTrackers()
+            updateTrackerCell(at: indexPath)
+        } catch {
+            print("Ошибка при отметке трекера:", error)
         }
+    }
+    
+    private func updateTrackerCell(at indexPath: IndexPath) {
+        guard let cell = trackerView.collectionView.cellForItem(at: indexPath) as? TrackerCell else { return }
         
-        trackerView.collectionView.reloadItems(at: [indexPath])
+        let tracker = filteredCategories[indexPath.section].trackers[indexPath.row]
+        let selectedDate = datePicker.date
+        
+        let completedDates = endedTrackers
+            .filter { $0.trackerId == tracker.id }
+            .map { $0.date }
+        
+        cell.configure(with: tracker, completedDates: completedDates, selectedDate: selectedDate)
     }
 }
 
 // MARK: Ext NewTrackerViewControllerDelegate
 extension TrackerViewController: NewTrackerViewControllerDelegate {
     func didTappedCreateNewTracker(_ tracker: Tracker, categoryTitle: String) {
-        if let index = trackerCategories.firstIndex(where: { $0.title == categoryTitle }) {
-            let oldCategory = trackerCategories[index]
-            let updatedCategory = TrackerCategory(
-                title: oldCategory.title,
-                trackers: oldCategory.trackers + [tracker]
-            )
-            trackerCategories[index] = updatedCategory
-        } else {
-            let newCategory = TrackerCategory(
-                title: categoryTitle,
-                trackers: [tracker]
-            )
-            trackerCategories.append(newCategory)
+        do {
+            try trackerStore.createTracker(tracker: tracker, categoryTitle: categoryTitle)
+        } catch {
+            print("Ошибка создания нового трекера:", error)
         }
-        filterTrackers(for: datePicker.date)
+    }
+}
+
+extension TrackerViewController: TrackerStoreDelegate {
+    func didUpdateTrackers() {
+        loadTrackers()
+    }
+}
+
+extension TrackerViewController: TrackerRecordStoreDelegate {
+    func didUpdateRecords() {
+        loadRecords()
     }
 }

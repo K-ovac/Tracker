@@ -14,14 +14,19 @@ protocol NewTrackerViewControllerDelegate: AnyObject {
 final class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
+    
     private var selectedWeekdays: Set<Weekday> = []
     private var selectedCategoryName: String = "Важное"
+    private var selectedEmoji: String?
+    private var selectedColor: UIColor?
     
     // MARK: - Scroll
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
     // MARK: - UI
+    private var collectionHeight: NSLayoutConstraint?
+    
     private let nameTrackerTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
@@ -45,7 +50,7 @@ final class NewTrackerViewController: UIViewController {
         
         textField.rightView = rightContainer
         textField.rightViewMode = .whileEditing
-
+        
         return textField
     }()
     
@@ -107,6 +112,21 @@ final class NewTrackerViewController: UIViewController {
         border: false
     )
     
+    private let optionCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 5
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.alwaysBounceVertical = true
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.isScrollEnabled = false
+        collectionView.alwaysBounceVertical = false
+        
+        return collectionView
+    }()
+    
     // MARK: - Stacks
     private let contentStackView: UIStackView = {
         let stack = UIStackView()
@@ -150,38 +170,50 @@ final class NewTrackerViewController: UIViewController {
         
         nameTrackerTextField.delegate = self
         nameTrackerTextField.becomeFirstResponder()
+        
+        optionCollectionView.dataSource = self
+        optionCollectionView.delegate = self
+        
+        optionCollectionView.register(OptionCell.self,
+                                      forCellWithReuseIdentifier: OptionCell.identifier)
+        optionCollectionView.register(OptionHeaderViewController.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: OptionHeaderViewController.identifier)
+        
         updateCreateButtonState()
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionHeight?.constant = optionCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
     
     // MARK: - Setup
     private func setupView() {
         navigationItem.title = "Новая привычка"
         view.backgroundColor = Colors.background
-
+        
+        
         scheduleButton.addSubview(scheduleSubtitleLabel)
         categoryButton.addSubview(categorySubtitleLabel)
-
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         contentView.addSubview(contentStackView)
         contentStackView.addArrangedSubview(fieldStack)
         contentStackView.addArrangedSubview(optionsStackView)
+        contentStackView.addArrangedSubview(optionCollectionView)
         contentStackView.setCustomSpacing(24, after: fieldStack)
-
+        
+        
+        
         optionsStackView.addArrangedSubview(categoryButton)
-
+        
         separatorContainer.addSubview(separator)
-        NSLayoutConstraint.activate([
-            separator.leadingAnchor.constraint(equalTo: separatorContainer.leadingAnchor, constant: 16),
-            separator.trailingAnchor.constraint(equalTo: separatorContainer.trailingAnchor, constant: -16),
-            separator.topAnchor.constraint(equalTo: separatorContainer.topAnchor),
-            separator.bottomAnchor.constraint(equalTo: separatorContainer.bottomAnchor),
-            separatorContainer.heightAnchor.constraint(equalToConstant: 1)
-        ])
+        
         optionsStackView.addArrangedSubview(separatorContainer)
         optionsStackView.addArrangedSubview(scheduleButton)
-
+        
         view.addSubview(buttonsStackView)
         buttonsStackView.addArrangedSubview(cancelButton)
         buttonsStackView.addArrangedSubview(createButton)
@@ -198,7 +230,7 @@ final class NewTrackerViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16),
             
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
@@ -229,8 +261,11 @@ final class NewTrackerViewController: UIViewController {
             buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.l),
             buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Metrics.t),
             buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            buttonsStackView.heightAnchor.constraint(equalToConstant: 60)
+            buttonsStackView.heightAnchor.constraint(equalToConstant: 60),
         ])
+        
+        collectionHeight = optionCollectionView.heightAnchor.constraint(equalToConstant: 0)
+        collectionHeight?.isActive = true
     }
     
     // MARK: - Factory methods
@@ -302,19 +337,21 @@ final class NewTrackerViewController: UIViewController {
     
     private func updateCreateButtonState() {
         let nameValid = !(nameTrackerTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
-        let enabled = nameValid && !selectedWeekdays.isEmpty
+        let enabled = nameValid && !selectedWeekdays.isEmpty && (selectedColor != nil) && (selectedColor != nil)
         createButton.isEnabled = enabled
         createButton.backgroundColor = enabled ? .ypBlack : Colors.unselectedItem
     }
     
-    // MARK: - Actions
+    // MARK: - Setup Actions
     private func setupActions() {
         cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
         createButton.addTarget(self, action: #selector(didTapCreate), for: .touchUpInside)
         scheduleButton.addTarget(self, action: #selector(didTapSchedule), for: .touchUpInside)
         nameTrackerTextField.addTarget(self, action: #selector(didSetNameTracker), for: .editingChanged)
+        categoryButton.addTarget(self, action: #selector(didTapCategory), for: .touchUpInside)
     }
     
+    // MARK: - Actions
     @objc private func didTapCancel() {
         print("Нажата кнопка отмены")
         dismiss(animated: true)
@@ -322,11 +359,13 @@ final class NewTrackerViewController: UIViewController {
     
     @objc private func didTapCreate() {
         print("Нажата кнопка создать")
-        guard let name = nameTrackerTextField.text else { return }
+        guard let name = nameTrackerTextField.text,
+              let emoji = selectedEmoji,
+              let color = selectedColor else { return }
         let tracker = Tracker(id: UUID(),
                               name: name,
-                              color: .ypBlue,
-                              emoji: "💩",
+                              color: color,
+                              emoji: emoji,
                               schedule: selectedWeekdays, dayCreatedTracker: Date())
         
         delegate?.didTappedCreateNewTracker(tracker, categoryTitle: selectedCategoryName)
@@ -342,7 +381,7 @@ final class NewTrackerViewController: UIViewController {
     
     @objc private func didSetNameTracker() {
         updateCreateButtonState()
-
+        
         let showLimit = (nameTrackerTextField.text?.count ?? 0) > 38
         nameLimitLabel.isHidden = !showLimit
         print("В поле ввода введен символ")
@@ -352,6 +391,13 @@ final class NewTrackerViewController: UIViewController {
         nameTrackerTextField.text = ""
         updateCreateButtonState()
         print("Поле названия трекера очищено")
+    }
+    
+    @objc private func didTapCategory() {
+        print("Нажата кнопка Категория")
+//        let vc = CategoryViewController()
+//        vc.delegate = self
+//        present(UINavigationController(rootViewController: vc), animated: true)
     }
 }
 
@@ -363,6 +409,15 @@ extension NewTrackerViewController: ScheduleViewControllerDelegate {
         updateCategoryButtonTitle()
         updateScheduleButtonTitle()
         updateCreateButtonState()
+    }
+}
+
+extension NewTrackerViewController: CategoryViewControllerDelegate {
+    func didSelectCategory(_ categoryName: String) {
+        selectedCategoryName = categoryName
+        updateCategoryButtonTitle()
+        updateCreateButtonState()
+        dismiss(animated: true)
     }
 }
 
@@ -411,5 +466,97 @@ extension NewTrackerViewController {
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         scrollView.contentInset.bottom = 0
+    }
+}
+
+extension NewTrackerViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let section = TrackerSection(rawValue: section) else { return 0 }
+        return section.numberOfItems
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OptionCell.identifier, for: indexPath) as? OptionCell else { return UICollectionViewCell() }
+        
+        guard let sectionType = TrackerSection(rawValue: indexPath.section) else { return cell }
+        
+        switch sectionType {
+        case .emojis:
+            let emoji = TrackerEmojis.emojis[indexPath.row]
+            let isSelected = emoji == selectedEmoji
+            
+            cell.configureEmoji(emoji, isSelected: isSelected)
+        case .colors:
+            let colorItem = TrackerColors.allCases[indexPath.row]
+            let color = colorItem.uiColor
+            let isSelected = color == selectedColor
+            
+            cell.configureColor(color, isSelected: isSelected)
+        }
+        
+        return cell
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        TrackerSection.allCases.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
+        
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: OptionHeaderViewController.identifier, for: indexPath) as? OptionHeaderViewController else {
+            return UICollectionReusableView()
+        }
+        
+        if let section = TrackerSection(rawValue: indexPath.section) {
+            header.configure(title: section.title)
+            
+        }
+        
+        return header
+    }
+}
+
+extension NewTrackerViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let section = TrackerSection(rawValue: indexPath.section) else { return }
+        
+        switch section {
+        case .emojis:
+            let previousIndex = TrackerEmojis.emojis.firstIndex(where: { $0 == selectedEmoji })
+            selectedEmoji = TrackerEmojis.emojis[indexPath.row]
+            
+            var reloadIndexes: [IndexPath] = [indexPath]
+            if let prev = previousIndex {
+                reloadIndexes.append(IndexPath(row: prev, section: indexPath.section))
+            }
+            collectionView.reloadItems(at: reloadIndexes)
+            
+        case .colors:
+            let previousIndex = TrackerColors.allCases.firstIndex(where: { $0.uiColor == selectedColor })
+            selectedColor = TrackerColors.allCases[indexPath.row].uiColor
+            
+            var reloadIndexes: [IndexPath] = [indexPath]
+            if let prev = previousIndex {
+                reloadIndexes.append(IndexPath(row: prev, section: indexPath.section))
+            }
+            collectionView.reloadItems(at: reloadIndexes)
+        }
+        
+        updateCreateButtonState()
+    }
+}
+
+extension NewTrackerViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: 52, height: 52)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        CGSize(width: collectionView.bounds.width, height: 50)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 0)
     }
 }

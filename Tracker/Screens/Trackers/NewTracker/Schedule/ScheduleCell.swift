@@ -7,23 +7,25 @@
 import UIKit
 
 final class ScheduleCell: UITableViewCell {
-
+    //MARK: - Properties
     static let identifier = "ScheduleCell"
 
     var onSwitchChanged: ((Bool) -> Void)?
-
+    
+    //MARK: - UI
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
-
+    
     private let daySwitch: UISwitch = {
         let sw = UISwitch()
         sw.onTintColor = .ypBlue
         return sw
     }()
-
+    
+    //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -32,7 +34,8 @@ final class ScheduleCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    //MARK: - SetupView
     private func setup() {
         selectionStyle = .none
         contentView.addSubview(titleLabel)
@@ -54,12 +57,14 @@ final class ScheduleCell: UITableViewCell {
                             action: #selector(didTapSwitchChange),
                             for: .valueChanged)
     }
-
+    
+    //MARK: - Factory Methods
     func configure(title: String, isOn: Bool) {
         titleLabel.text = title
         daySwitch.isOn = isOn
     }
-
+    
+    //MARK: - Action
     @objc
     private func didTapSwitchChange() {
         onSwitchChanged?(daySwitch.isOn)
