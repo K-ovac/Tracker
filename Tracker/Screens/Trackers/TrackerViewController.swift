@@ -18,6 +18,7 @@ final class TrackerViewController: UIViewController {
     
     private let trackerStore = TrackerStore()
     private let trackerRecordStore = TrackerRecordStore()
+    private let trackerCategoryStore = TrackerCategoryStore()
     
     private let trackerView = TrackerView()
     private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "Важное",
@@ -62,13 +63,14 @@ final class TrackerViewController: UIViewController {
     
     // MARK: Setup
     private func setupNavigationBar() {
+        let addButtonImage = UIImage(named: "plus")
         let addTrackerButton = UIBarButtonItem(
-            barButtonSystemItem: .add,
+            image: addButtonImage,
+            style: .plain,
             target: self,
             action: #selector(didTapAddTracker)
         )
         addTrackerButton.tintColor = Colors.backgroundButton
-        addTrackerButton.image = UIImage(named: "addButton")
         navigationItem.leftBarButtonItem = addTrackerButton
         
         datePicker.addTarget(self,
@@ -104,6 +106,7 @@ final class TrackerViewController: UIViewController {
         
         trackerView.collectionView.reloadData()
         trackerView.backStack.isHidden = !filteredCategories.isEmpty
+        trackerView.filtersButton.isHidden = filteredCategories.isEmpty
         print("Отфильтрованные трекеры:", filteredTrackers.map { $0.name })
     }
     
@@ -176,11 +179,11 @@ extension TrackerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
         
-        let header = collectionView.dequeueReusableSupplementaryView(
+        guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: TrackerHeaderView.identifier,
             for: indexPath
-        ) as! TrackerHeaderView
+        ) as? TrackerHeaderView else { return UICollectionReusableView() }
         
         let category = filteredCategories[indexPath.section]
         header.configure(title: category.title)

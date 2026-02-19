@@ -11,9 +11,11 @@ final class OptionCell: UICollectionViewCell {
 
     static let identifier = "OptionCell"
     
+    // MARK: - UI
     private let emojiLabel = UILabel()
     private let colorLabel = UILabel()
     
+    // MARK: - Init With Layout
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -43,6 +45,7 @@ final class OptionCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) { fatalError() }
     
+    // MARK: - Configure Cells
     func configureEmoji(_ emoji: String, isSelected: Bool) {
         emojiLabel.text = emoji
         

@@ -16,7 +16,7 @@ final class TrackerView: UIView {
     }
     
     // MARK: - UI
-    private let filtersButton = TrackerView.makeFiltersButton(
+    let filtersButton = TrackerView.makeFiltersButton(
         title: "Фильтры",
         tintColor: .ypWhite,
         bckgColor: .ypBlue,
@@ -105,7 +105,7 @@ final class TrackerView: UIView {
             filtersButton.widthAnchor.constraint(equalToConstant: 114),
             filtersButton.heightAnchor.constraint(equalToConstant: 50),
             filtersButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            filtersButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+            filtersButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
     
@@ -118,7 +118,8 @@ final class TrackerView: UIView {
         button.titleLabel?.textAlignment = .center
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16
-        button.layer.masksToBounds = true
+        button.layer.masksToBounds = false
+        button.isHidden = true
         
         return button
     }

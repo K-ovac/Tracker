@@ -16,7 +16,7 @@ final class NewTrackerViewController: UIViewController {
     weak var delegate: NewTrackerViewControllerDelegate?
     
     private var selectedWeekdays: Set<Weekday> = []
-    private var selectedCategoryName: String = "Важное"
+    private var selectedCategoryName: String = "Радостные мелочи"
     private var selectedEmoji: String?
     private var selectedColor: UIColor?
     
@@ -49,7 +49,7 @@ final class NewTrackerViewController: UIViewController {
         clearButton.center = CGPoint(x: rightContainer.frame.width / 2 - 6, y: rightContainer.frame.height / 2)
         
         textField.rightView = rightContainer
-        textField.rightViewMode = .whileEditing
+        textField.rightViewMode = .never
         
         return textField
     }()
@@ -305,7 +305,7 @@ final class NewTrackerViewController: UIViewController {
         button.layer.masksToBounds = true
         if border {
             button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor.red.cgColor
+            button.layer.borderColor = UIColor.ypRed.cgColor
         }
         return button
     }
@@ -340,6 +340,11 @@ final class NewTrackerViewController: UIViewController {
         let enabled = nameValid && !selectedWeekdays.isEmpty && (selectedColor != nil) && (selectedColor != nil)
         createButton.isEnabled = enabled
         createButton.backgroundColor = enabled ? .ypBlack : Colors.unselectedItem
+    }
+    
+    private func hideLimitLabel() {
+        let showLimit = (nameTrackerTextField.text?.count ?? 0) > 38
+        nameLimitLabel.isHidden = !showLimit
     }
     
     // MARK: - Setup Actions
@@ -381,14 +386,16 @@ final class NewTrackerViewController: UIViewController {
     
     @objc private func didSetNameTracker() {
         updateCreateButtonState()
-        
-        let showLimit = (nameTrackerTextField.text?.count ?? 0) > 38
-        nameLimitLabel.isHidden = !showLimit
+        let hasText = !(nameTrackerTextField.text?.isEmpty ?? true)
+            nameTrackerTextField.rightViewMode = hasText ? .always : .never
+        hideLimitLabel()
         print("В поле ввода введен символ")
     }
     
     @objc private func didTapClearText() {
+        hideLimitLabel()
         nameTrackerTextField.text = ""
+        nameTrackerTextField.rightViewMode = .never
         updateCreateButtonState()
         print("Поле названия трекера очищено")
     }
@@ -557,6 +564,6 @@ extension NewTrackerViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 0)
+        UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
     }
 }

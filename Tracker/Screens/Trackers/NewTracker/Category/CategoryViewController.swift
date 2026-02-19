@@ -28,8 +28,6 @@ final class CategoryViewController: UIViewController {
         return tableView
     }()
     
-    
-    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -19,10 +19,16 @@ final class TabBarController: UITabBarController {
     // MARK: - Setup
     private func setupView() {
         view.backgroundColor = Colors.background
-        tabBar.barTintColor = Colors.tabBarTint
+        
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Colors.tabBarTint
+        appearance.shadowColor = UIColor.separator
+        
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
         tabBar.tintColor = Colors.selectedItem
         tabBar.unselectedItemTintColor = Colors.unselectedItem
-        tabBar.isTranslucent = false
     }
     
     private func setupTabBar() {
