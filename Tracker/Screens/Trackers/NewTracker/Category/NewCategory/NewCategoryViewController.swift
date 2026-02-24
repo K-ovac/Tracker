@@ -6,15 +6,16 @@
 //
 
 import UIKit
-
+//MARK: NewCategoryViewControllerDelegate
 protocol NewCategoryViewControllerDelegate: AnyObject {
     func didCreateCategory(_ category: Category)
 }
 
 final class NewCategoryViewController: UIViewController {
-    
+    //MARK: Properties
     weak var delegate: NewCategoryViewControllerDelegate?
     
+    //MARK: UI
     private lazy var nameCategoryTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Введите название категории"
@@ -25,12 +26,26 @@ final class NewCategoryViewController: UIViewController {
         textField.heightAnchor.constraint(equalToConstant: 75).isActive = true
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         textField.leftViewMode = .always
-
+        
+        let clearButton = UIButton(type: .system)
+        clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        clearButton.tintColor = .ypGray
+        clearButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        clearButton.addTarget(nil, action: #selector(didTapClearText), for: .touchUpInside)
+        
+        let rightContainer = UIView(frame: CGRect(x: 0, y: 0, width: 41, height: 24))
+        rightContainer.addSubview(clearButton)
+        clearButton.center = CGPoint(x: rightContainer.frame.width / 2 - 6, y: rightContainer.frame.height / 2)
+        
+        textField.rightView = rightContainer
+        textField.rightViewMode = .never
+        
         return textField
     }()
     
     private lazy var completeCategoryButton = setupBottomButton(title: "Готово")
     
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,6 +55,7 @@ final class NewCategoryViewController: UIViewController {
         updateCompleteButtonState()
     }
     
+    //MARK: setupView
     private func setupView() {
         navigationItem.title = "Новая категория"
         view.backgroundColor = Colors.background
@@ -48,6 +64,7 @@ final class NewCategoryViewController: UIViewController {
         view.addSubview(completeCategoryButton)
     }
     
+    //MARK: setupLayout
     private func setupLayout() {
         [nameCategoryTextField, completeCategoryButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -62,7 +79,7 @@ final class NewCategoryViewController: UIViewController {
             completeCategoryButton.leadingAnchor.constraint(equalTo: nameCategoryTextField.leadingAnchor),
             completeCategoryButton.trailingAnchor.constraint(equalTo: nameCategoryTextField.trailingAnchor),
             completeCategoryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            completeCategoryButton.heightAnchor.constraint(equalToConstant: 60)
+            completeCategoryButton.heightAnchor.constraint(equalToConstant: Metrics.heightButton)
         ])
     }
     
@@ -102,6 +119,8 @@ final class NewCategoryViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didSetNameCategory() {
+        let hasText = !(nameCategoryTextField.text?.isEmpty ?? true)
+        nameCategoryTextField.rightViewMode = hasText ? .always : .never
         updateCompleteButtonState()
         print("В поле ввода введен символ")
     }
@@ -109,8 +128,15 @@ final class NewCategoryViewController: UIViewController {
     @objc private func didTapComplete() {
         print("Нажатие кнопки готово")
         guard let name = nameCategoryTextField.text, !name.isEmpty else { return }
-        let newCategory = Category(name: name, isSelected: false)
+        let newCategory = Category(name: name)
         delegate?.didCreateCategory(newCategory)
         dismiss(animated: true)
+    }
+    
+    @objc private func didTapClearText() {
+        nameCategoryTextField.text = ""
+        nameCategoryTextField.rightViewMode = .never
+        updateCompleteButtonState()
+        print("Поле названия трекера очищено")
     }
 }

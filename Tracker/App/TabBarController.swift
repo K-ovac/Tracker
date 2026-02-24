@@ -16,7 +16,7 @@ final class TabBarController: UITabBarController {
         setupTabBar()
     }
     
-    // MARK: - Setup
+    // MARK: - Setup View
     private func setupView() {
         view.backgroundColor = Colors.background
         
@@ -31,6 +31,7 @@ final class TabBarController: UITabBarController {
         tabBar.unselectedItemTintColor = Colors.unselectedItem
     }
     
+    //MARK: - Setup TabBar
     private func setupTabBar() {
         let trackerIcon = UIImage(named: "trackerTabBarItem")?
             .withRenderingMode(.alwaysTemplate)

@@ -8,6 +8,10 @@
 import UIKit
 
 final class TrackerViewController: UIViewController {
+    //MARK: CoreData Stores
+    private let trackerStore = TrackerStore()
+    private let trackerRecordStore = TrackerRecordStore()
+    
     //MARK: Properties
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -16,17 +20,6 @@ final class TrackerViewController: UIViewController {
         return formatter
     }()
     
-    private let trackerStore = TrackerStore()
-    private let trackerRecordStore = TrackerRecordStore()
-    private let trackerCategoryStore = TrackerCategoryStore()
-    
-    private let trackerView = TrackerView()
-    private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "Важное",
-                                                                        trackers: [])]
-    private var filteredCategories: [TrackerCategory] = []
-    private var endedTrackers: [TrackerRecord] = []
-    private var filteredTrackers: [Tracker] = []
-    
     private let datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.locale = Locale(identifier: "ru_RU")
@@ -34,6 +27,13 @@ final class TrackerViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .compact
         return datePicker
     }()
+    
+    private let trackerView = TrackerView()
+    private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "Важное",
+                                                                        trackers: [])]
+    private var filteredCategories: [TrackerCategory] = []
+    private var endedTrackers: [TrackerRecord] = []
+    private var filteredTrackers: [Tracker] = []
     
     // MARK: Lifecycle
     override func loadView() {

@@ -7,6 +7,7 @@
 
 import UIKit
 
+//MARK: CategoryViewControllerDelegate
 protocol CategoryViewControllerDelegate: AnyObject {
     func didSelectCategory(_ categoryName: String)
 }
@@ -16,12 +17,15 @@ final class CategoryViewController: UIViewController {
     //MARK: - Properties
     weak var delegate: CategoryViewControllerDelegate?
     
-    private var selectedIndex: Int?
-    private var createdCategories: [Category] = []
+    private let categoryViewModel = CategoryViewModel()
     
     //MARK: - UI
-    private lazy var addCategoryButton = setupBottomButton(title: "Добавить категорию")
-    private lazy var placeholderLabel = setupPlaceholderLabel(titleText: "Привычки и события можно \n объединять по смыслу")
+    private lazy var addCategoryButton = setupBottomButton(
+        title: "Добавить категорию"
+    )
+    private lazy var placeholderLabel = setupPlaceholderLabel(
+        titleText: "Привычки и события можно \n объединять по смыслу"
+    )
     private let categoryTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.rowHeight = 75
@@ -31,10 +35,14 @@ final class CategoryViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
         setupLayout()
-        setupTable()
+        setupTableView()
         setupActions()
+        
+        bindingCategoryViewModel()
+        hidePlaceholderLabel()
     }
     
     //MARK: - SetupView
@@ -44,17 +52,15 @@ final class CategoryViewController: UIViewController {
         view.backgroundColor = Colors.background
         
         [
-            
             categoryTableView,
             addCategoryButton,
             placeholderLabel,
         ].forEach {
             view.addSubview($0)
         }
-        
     }
     
-    private func setupTable() {
+    private func setupTableView() {
         categoryTableView.delegate = self
         categoryTableView.dataSource = self
         categoryTableView.reloadData()
@@ -74,12 +80,16 @@ final class CategoryViewController: UIViewController {
             categoryTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             categoryTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             categoryTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             addCategoryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.l),
             addCategoryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Metrics.t),
             addCategoryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            addCategoryButton.heightAnchor.constraint(equalToConstant: 60),
-            
+            addCategoryButton.heightAnchor.constraint(equalToConstant: Metrics.heightButton),
+        ])
+        
+        NSLayoutConstraint.activate([
             placeholderLabel.bottomAnchor.constraint(equalTo: addCategoryButton.topAnchor, constant: -232),
             placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
@@ -128,19 +138,39 @@ final class CategoryViewController: UIViewController {
         NSLayoutConstraint.activate([
             image.heightAnchor.constraint(equalToConstant: 80),
             image.widthAnchor.constraint(equalToConstant: 80),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             title.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 8)
         ])
         
         return stack
     }
     
+    private func hidePlaceholderLabel() {
+        placeholderLabel.isHidden = categoryViewModel.numberOfRows() != 0
+    }
+    
+    //MARK: Binding
+    private func bindingCategoryViewModel() {
+        categoryViewModel.onCategoriesChange = { [weak self] in
+            self?.categoryTableView.reloadData()
+            self?.hidePlaceholderLabel()
+        }
+        
+        categoryViewModel.onSelectCategoryChange = { [weak self] in
+            self?.categoryTableView.reloadData()
+        }
+    }
+    
+    //MARK: Setup Actions
     private func setupActions() {
         addCategoryButton.addTarget(self,
                                     action: #selector(didTapAddCategory),
                                     for: .touchUpInside)
     }
     
+    //MARK: Actions
     @objc private func didTapAddCategory() {
         print("Нажата кнопка добавления категории")
         let vc = NewCategoryViewController()
@@ -149,9 +179,10 @@ final class CategoryViewController: UIViewController {
     }
 }
 
+//MARK: Ext UITableViewDataSource
 extension CategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        createdCategories.count
+        categoryViewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -159,8 +190,8 @@ extension CategoryViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let isSelected = selectedIndex == indexPath.row
-        let category = createdCategories[indexPath.row]
+        let isSelected = categoryViewModel.isSelected(index: indexPath.row)
+        let category = categoryViewModel.category(at: indexPath.row)
         
         cell.configure(title: category.name, isSelected: isSelected)
         
@@ -168,19 +199,21 @@ extension CategoryViewController: UITableViewDataSource {
     }
 }
 
+//MARK: Ext UITableViewDelegate
 extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let category = createdCategories[indexPath.row]
+        categoryViewModel.selectCategory(at: indexPath.row)
+        
+        let category = categoryViewModel.category(at: indexPath.row)
+        
         delegate?.didSelectCategory(category.name)
-        selectedIndex = indexPath.row
-        tableView.reloadData()
+        
     }
 }
 
+//MARK: Ext NewCategoryViewControllerDelegate
 extension CategoryViewController: NewCategoryViewControllerDelegate {
     func didCreateCategory(_ category: Category) {
-        createdCategories.append(category)
-        categoryTableView.reloadData()
-        placeholderLabel.isHidden = !createdCategories.isEmpty
+        categoryViewModel.addCategory(title: category.name)
     }
 }

@@ -8,10 +8,12 @@
 import CoreData
 import UIKit
 
+//MARK: TrackerStoreDelegate
 protocol TrackerStoreDelegate: AnyObject {
     func didUpdateTrackers()
 }
 
+//MARK: Constants
 private enum Constants {
     static let catAttribute_1: String = "trackerCategory.title"
     static let trackerAttribute_1: String = "dayCreatedAt"
@@ -19,18 +21,21 @@ private enum Constants {
 }
 
 final class TrackerStore: NSObject {
+    //MARK: Properties
     weak var delegate: TrackerStoreDelegate?
     
     private let context: NSManagedObjectContext
     private let categoryStore = TrackerCategoryStore()
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
     
+    //MARK: Init
     init(context: NSManagedObjectContext = CoreDataManager.shared.context) {
         self.context = context
         super.init()
         setupFetchedResultsController()
     }
     
+    //MARK: FetchedResultsController
     private func setupFetchedResultsController() {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.sortDescriptors = [
@@ -51,6 +56,7 @@ final class TrackerStore: NSObject {
         self.fetchedResultsController = fetchedResultsController
     }
     
+    //MARK: Factory methods
     func createTracker(tracker: Tracker, categoryTitle: String) throws {
         let trackerCoreData = TrackerCoreData(context: context)
         
@@ -116,6 +122,7 @@ final class TrackerStore: NSObject {
     }
 }
 
+//MARK: Ext NSFetchedResultsControllerDelegate
 extension TrackerStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         delegate?.didUpdateTrackers()

@@ -7,8 +7,14 @@
 
 import UIKit
 
+//MARK: TrackerViewDelegate
+protocol TrackerViewDelegate: AnyObject {
+    func didTapFiltersButton()
+    //func datePickerValueChanged(_ sender: UIDatePicker)
+}
+
 final class TrackerView: UIView {
-    
+    //MARK: Properties
     weak var delegate: TrackerViewDelegate?
     
     var collectionView: UICollectionView {
@@ -16,7 +22,7 @@ final class TrackerView: UIView {
     }
     
     // MARK: - UI
-    let filtersButton = TrackerView.makeFiltersButton(
+    lazy var filtersButton = makeFiltersButton(
         title: "Фильтры",
         tintColor: .ypWhite,
         bckgColor: .ypBlue,
@@ -38,7 +44,7 @@ final class TrackerView: UIView {
         return searchField
     }()
     
-    let backStack: UIStackView = TrackerView.setupBackgroundStack()
+    lazy var backStack: UIStackView = setupBackgroundStack()
     
     private let trackerCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -88,20 +94,28 @@ final class TrackerView: UIView {
             nameTrackerScreenLabel.widthAnchor.constraint(equalToConstant: Metrics.nameTrScrLabelW),
             nameTrackerScreenLabel.heightAnchor.constraint(equalToConstant: Metrics.nameTrScrLabelH),
             nameTrackerScreenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.l),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             searchField.topAnchor.constraint(equalTo: topAnchor, constant: Metrics.searchFieldtop),
             searchField.heightAnchor.constraint(equalToConstant: Metrics.searchFieldH),
             searchField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Metrics.t),
             searchField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.l),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             backStack.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 230),
             backStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             trackerCollectionView.topAnchor.constraint(equalTo: searchField.bottomAnchor),
             trackerCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.l),
             trackerCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Metrics.t),
             trackerCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             filtersButton.widthAnchor.constraint(equalToConstant: 114),
             filtersButton.heightAnchor.constraint(equalToConstant: 50),
             filtersButton.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -109,7 +123,7 @@ final class TrackerView: UIView {
         ])
     }
     
-    private static func makeFiltersButton(title: String, tintColor: UIColor, bckgColor: UIColor,titleSize: CGFloat) -> UIButton {
+    private func makeFiltersButton(title: String, tintColor: UIColor, bckgColor: UIColor,titleSize: CGFloat) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.backgroundColor = bckgColor
@@ -124,7 +138,7 @@ final class TrackerView: UIView {
         return button
     }
     
-    private static func setupBackgroundStack() -> UIStackView {
+    private func setupBackgroundStack() -> UIStackView {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 16
