@@ -6,11 +6,12 @@
 //
 
 import CoreData
-
+//MARK: TrackerRecordStoreDelegate
 protocol TrackerRecordStoreDelegate: AnyObject {
     func didUpdateRecords()
 }
 
+//MARK: Constants
 private enum Constants {
     static let storeName: String = "TrackerRecordStore"
     static let recordAttribute_1: String = "date"
@@ -21,17 +22,20 @@ private enum Constants {
 }
 
 final class TrackerRecordStore: NSObject {
+    //MARK: Properties
     weak var delegate: TrackerRecordStoreDelegate?
     
     private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
     
+    //MARK: Init
     init(context: NSManagedObjectContext = CoreDataManager.shared.context) {
         self.context = context
         super.init()
         setupFetchedResultsController()
     }
     
+    //MARK: FetchedResultsController
     private func setupFetchedResultsController() {
         let request: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: Constants.recordAttribute_1, ascending: true)]
@@ -49,6 +53,7 @@ final class TrackerRecordStore: NSObject {
         try? frc.performFetch()
     }
     
+    //MARK: Factory methods
     func fetchCompletedTrackers() -> [TrackerRecord] {
         let records = fetchedResultsController?.fetchedObjects ?? []
         return records.compactMap { record in
@@ -108,6 +113,7 @@ final class TrackerRecordStore: NSObject {
     }
 }
 
+//MARK: Ext NSFetchedResultsControllerDelegate
 extension TrackerRecordStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         delegate?.didUpdateRecords()

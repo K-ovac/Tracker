@@ -6,29 +6,31 @@
 //
 import UIKit
 
+//MARK: ScheduleViewControllerDelegate
 protocol ScheduleViewControllerDelegate: AnyObject {
     func didSelectSchedule(_ weekdays: Set<Weekday>)
 }
 
 final class ScheduleViewController: UIViewController {
-    
+    //MARK: Properties
     weak var delegate: ScheduleViewControllerDelegate?
     
     private var selectedWeekdays: Set<Weekday> = []
     
+    //MARK: UI
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = 75
         return tableView
     }()
-    
     private let completeButton = makeBottomButton(
         title: "Готово",
         titleColor: .ypWhite,
         background: Colors.backgroundButton
     )
     
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -36,6 +38,7 @@ final class ScheduleViewController: UIViewController {
         setupTable()
     }
     
+    //MARK: Setups
     private func setupView() {
         navigationItem.title = "Расписание"
         view.backgroundColor = Colors.background
@@ -68,12 +71,13 @@ final class ScheduleViewController: UIViewController {
             completeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             completeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             completeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            completeButton.heightAnchor.constraint(equalToConstant: 60),
+            completeButton.heightAnchor.constraint(equalToConstant: Metrics.heightButton),
             
             tableView.bottomAnchor.constraint(equalTo: completeButton.topAnchor, constant: -16)
         ])
     }
     
+    //MARK: Configure BottomButton
     private static func makeBottomButton(
         title: String,
         titleColor: UIColor,
@@ -90,8 +94,7 @@ final class ScheduleViewController: UIViewController {
         return button
     }
     
-    
-    
+    //MARK: Actions
     @objc
     private func didTapComplete() {
         delegate?.didSelectSchedule(selectedWeekdays)
@@ -100,6 +103,7 @@ final class ScheduleViewController: UIViewController {
     }
 }
 
+//MARK: UITableViewDataSource
 extension ScheduleViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

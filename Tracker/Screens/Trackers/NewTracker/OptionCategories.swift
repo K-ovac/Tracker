@@ -8,8 +8,10 @@
 import UIKit
 
 final class OptionHeaderViewController: UICollectionReusableView {
+    //MARK: Properties
     static let identifier = "OptionHeaderView"
     
+    //MARK: UI
     private let categoryNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 19, weight: .bold)
@@ -17,11 +19,17 @@ final class OptionHeaderViewController: UICollectionReusableView {
         return label
     }()
     
+    //MARK: Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: Setup
     private func setupLayout() {
         addSubview(categoryNameLabel)
         categoryNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -31,10 +39,6 @@ final class OptionHeaderViewController: UICollectionReusableView {
             categoryNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             categoryNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
     }
     
     func configure(title: String) {

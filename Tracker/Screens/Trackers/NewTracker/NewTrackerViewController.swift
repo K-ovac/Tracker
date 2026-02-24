@@ -191,8 +191,7 @@ final class NewTrackerViewController: UIViewController {
     private func setupView() {
         navigationItem.title = "Новая привычка"
         view.backgroundColor = Colors.background
-        
-        
+                
         scheduleButton.addSubview(scheduleSubtitleLabel)
         categoryButton.addSubview(categorySubtitleLabel)
         
@@ -204,8 +203,6 @@ final class NewTrackerViewController: UIViewController {
         contentStackView.addArrangedSubview(optionsStackView)
         contentStackView.addArrangedSubview(optionCollectionView)
         contentStackView.setCustomSpacing(24, after: fieldStack)
-        
-        
         
         optionsStackView.addArrangedSubview(categoryButton)
         
@@ -229,39 +226,46 @@ final class NewTrackerViewController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16),
-            
+        ])
+        NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
+        ])
+        NSLayoutConstraint.activate([
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.l),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Metrics.t),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
+        ])
+        NSLayoutConstraint.activate([
             categoryButton.heightAnchor.constraint(equalToConstant: 75),
             scheduleButton.heightAnchor.constraint(equalToConstant: 75),
+            
             separator.leadingAnchor.constraint(equalTo: separatorContainer.leadingAnchor, constant: 16),
             separator.trailingAnchor.constraint(equalTo: separatorContainer.trailingAnchor, constant: -16),
             separator.topAnchor.constraint(equalTo: separatorContainer.topAnchor),
             separator.bottomAnchor.constraint(equalTo: separatorContainer.bottomAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1),
             separatorContainer.heightAnchor.constraint(equalToConstant: 1),
-            
+        ])
+        NSLayoutConstraint.activate([
             scheduleSubtitleLabel.leadingAnchor.constraint(equalTo: scheduleButton.leadingAnchor, constant: 16),
             scheduleSubtitleLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: -16),
             scheduleSubtitleLabel.bottomAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: -14),
-            
+        ])
+        NSLayoutConstraint.activate([
             categorySubtitleLabel.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: 16),
             categorySubtitleLabel.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: -16),
             categorySubtitleLabel.bottomAnchor.constraint(equalTo: categoryButton.bottomAnchor, constant: -14),
-            
+        ])
+        NSLayoutConstraint.activate([
             buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.l),
             buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Metrics.t),
             buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            buttonsStackView.heightAnchor.constraint(equalToConstant: 60),
+            buttonsStackView.heightAnchor.constraint(equalToConstant: Metrics.heightButton),
         ])
         
         collectionHeight = optionCollectionView.heightAnchor.constraint(equalToConstant: 0)
@@ -402,23 +406,23 @@ final class NewTrackerViewController: UIViewController {
     
     @objc private func didTapCategory() {
         print("Нажата кнопка Категория")
-//        let vc = CategoryViewController()
-//        vc.delegate = self
-//        present(UINavigationController(rootViewController: vc), animated: true)
+        let vc = CategoryViewController()
+        vc.delegate = self
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 }
 
-// MARK: - Delegates
+// MARK: - Ext ScheduleViewControllerDelegate
 extension NewTrackerViewController: ScheduleViewControllerDelegate {
     func didSelectSchedule(_ weekdays: Set<Weekday>) {
         selectedWeekdays = weekdays
         print("Выбраны дни - \(selectedWeekdays.count): \(selectedWeekdays)")
-        updateCategoryButtonTitle()
         updateScheduleButtonTitle()
         updateCreateButtonState()
     }
 }
 
+// MARK: - Ext UITextFieldDelegate
 extension NewTrackerViewController: CategoryViewControllerDelegate {
     func didSelectCategory(_ categoryName: String) {
         selectedCategoryName = categoryName
@@ -428,6 +432,7 @@ extension NewTrackerViewController: CategoryViewControllerDelegate {
     }
 }
 
+// MARK: - Ext UITextFieldDelegate
 extension NewTrackerViewController: UITextFieldDelegate {
     func textField(
         _ textField: UITextField,
@@ -476,6 +481,7 @@ extension NewTrackerViewController {
     }
 }
 
+// MARK: Ext UICollectionViewDataSource
 extension NewTrackerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let section = TrackerSection(rawValue: section) else { return 0 }
@@ -524,6 +530,7 @@ extension NewTrackerViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: Ext UICollectionViewDelegate
 extension NewTrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let section = TrackerSection(rawValue: indexPath.section) else { return }
@@ -554,6 +561,7 @@ extension NewTrackerViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: Ext UICollectionViewDelegateFlowLayout
 extension NewTrackerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 52, height: 52)

@@ -21,6 +21,7 @@ final class CategoryCell: UITableViewCell {
     private let checkmark: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "checkmark"))
         imageView.tintColor = .ypGray
+        imageView.isHidden = true
         
         return imageView
     }()
@@ -45,16 +46,20 @@ final class CategoryCell: UITableViewCell {
         contentView.addSubview(checkmark)
     }
     
+    //MARK: setupLayout
     private func setupLayout() {
         [
-            titleLabel, checkmark
+            titleLabel,
+            checkmark
         ].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.l),
             titleLabel.trailingAnchor.constraint(equalTo: checkmark.leadingAnchor, constant: -1),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             checkmark.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Metrics.t),
             checkmark.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
@@ -65,9 +70,10 @@ final class CategoryCell: UITableViewCell {
         titleLabel.text = title
         
         if isSelected {
+            checkmark.isHidden = false
             checkmark.tintColor = .ypBlue
         } else {
-            checkmark.tintColor = .ypGray
+            checkmark.isHidden = true
         }
     }
 }

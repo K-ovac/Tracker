@@ -7,12 +7,13 @@
 import CoreData
 import UIKit
 
+//MARK: Constants
 private enum Constants {
     static let pcName = "TrackerModel"
 }
 
 final class CoreDataManager {
-    
+    //MARK: Properties
     static let shared = CoreDataManager()
     
     let persistentContainer: NSPersistentContainer
@@ -21,6 +22,7 @@ final class CoreDataManager {
         persistentContainer.viewContext
     }
     
+    //MARK: Init
     private init() {
         persistentContainer = NSPersistentContainer(name: Constants.pcName)
         
@@ -31,6 +33,7 @@ final class CoreDataManager {
         }
     }
     
+    //MARK: Factory methods
     func saveContext() {
         guard context.hasChanges else { return }
         
@@ -44,6 +47,7 @@ final class CoreDataManager {
     
 }
 
+//MARK: Ext UIColor
 extension UIColor {
     func encode() -> Data? {
         try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
@@ -56,6 +60,7 @@ extension UIColor {
     }
 }
 
+//MARK: TrackerCoreData
 extension TrackerCoreData {
     func setColor(_ color: UIColor) {
         self.color = color.encode()

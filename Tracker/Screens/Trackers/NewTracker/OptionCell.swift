@@ -43,7 +43,9 @@ final class OptionCell: UICollectionViewCell {
         ])
     }
     
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Configure Cells
     func configureEmoji(_ emoji: String, isSelected: Bool) {

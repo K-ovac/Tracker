@@ -16,7 +16,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = TabBarController()
+        let def = DefaultsService()
+        
+        //MARK: Condition Initial Controller
+        if def.sawOnboard {
+            window.rootViewController = TabBarController()
+        } else {
+            window.rootViewController = OnboardingPageViewController()
+        }
+                
         self.window = window
         window.makeKeyAndVisible()
     }
@@ -30,7 +38,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {}
     
     func sceneDidEnterBackground(_ scene: UIScene) {}
-    
-    
 }
 

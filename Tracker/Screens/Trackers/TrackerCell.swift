@@ -6,19 +6,20 @@
 //
 import UIKit
 
+//MARK: TrackerCellDelegate
 protocol TrackerCellDelegate: AnyObject {
     func didTrackerCellButtonTapped(_ cell: TrackerCell)
 }
 
 final class TrackerCell: UICollectionViewCell {
+    //MARK: Properties
     static let identifier: String = "TrackerCell"
     
     weak var delegate: TrackerCellDelegate?
     
-    // MARK: - UI
-    
     private var trackerId: UUID?
     
+    // MARK: - UI
     private let colorView: UIView = {
         let view = UIView()
         view.layer.masksToBounds = true
@@ -93,19 +94,27 @@ final class TrackerCell: UICollectionViewCell {
             colorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             colorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             colorView.heightAnchor.constraint(equalToConstant: 90),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             emojiLabel.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 12),
             emojiLabel.leadingAnchor.constraint(equalTo: colorView.leadingAnchor, constant: 12),
             emojiLabel.widthAnchor.constraint(equalToConstant: 24),
             emojiLabel.heightAnchor.constraint(equalToConstant: 24),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             taskLabel.leadingAnchor.constraint(equalTo: colorView.leadingAnchor, constant: 12),
             taskLabel.trailingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: -12),
             taskLabel.bottomAnchor.constraint(equalTo: colorView.bottomAnchor, constant: -12),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             daysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             daysLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             endTrackerButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             endTrackerButton.centerYAnchor.constraint(equalTo: daysLabel.centerYAnchor),
             endTrackerButton.widthAnchor.constraint(equalToConstant: 34),
@@ -152,6 +161,7 @@ final class TrackerCell: UICollectionViewCell {
         daysLabel.text = daysTitle(for: daysCount)
     }
     
+    //MARK: Actions
     @objc
     private func didTapEndTracker() {
         delegate?.didTrackerCellButtonTapped(self)

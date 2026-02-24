@@ -27,4 +27,6 @@ enum Metrics {
     static let questionLabTop: CGFloat = 490
     
     static let trackCellPrimTextH: CGFloat = 12
+    
+    static let heightButton: CGFloat = 60
 }
