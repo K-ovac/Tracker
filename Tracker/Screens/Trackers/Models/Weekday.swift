@@ -4,6 +4,7 @@
 //
 //  Created by Максим Лозебной on 07.02.2026.
 //
+import Foundation
 
 enum Weekday: Int, CaseIterable {
     case monday = 1
@@ -21,38 +22,45 @@ extension Weekday {
     var fullTitle: String {
         switch self {
         case .monday:
-            return "Понедельник"
+            return L10n.monday
         case .tuesday:
-            return "Вторник"
-        case .wednesday: 
-            return "Среда"
-        case .thursday: 
-            return "Четверг"
-        case .friday: 
-            return "Пятница"
-        case .saturday: 
-            return "Суббота"
+            return L10n.tuesday
+        case .wednesday:
+            return L10n.wednesday
+        case .thursday:
+            return L10n.thursday
+        case .friday:
+            return L10n.friday
+        case .saturday:
+            return L10n.saturday
         case .sunday:
-            return "Воскресенье"
+            return L10n.sunday
         }
     }
     // MARK: short
     var shortTitle: String {
         switch self {
         case .monday:
-            return "Пн"
+            return L10n.mon
         case .tuesday:
-            return "Вт"
+            return L10n.tue
         case .wednesday:
-            return "Ср"
+            return L10n.wed
         case .thursday:
-            return "Чт"
+            return L10n.thu
         case .friday:
-            return "Пт"
+            return L10n.fri
         case .saturday:
-            return "Сб"
+            return L10n.sat
         case .sunday:
-            return "Вс"
+            return L10n.sun
         }
+    }
+    //функция для сортировки пн-пт относительно календаря системы.
+    //из-за дублирования в двух экранах была вынесена с свое перечисление
+    static func weekdayFrom(date: Date) -> Weekday {
+        let mapping: [Weekday] = [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
+        let index = Calendar.current.component(.weekday, from: date)
+        return mapping[index - 1]
     }
 }

@@ -18,17 +18,17 @@ final class TabBarController: UITabBarController {
     
     // MARK: - Setup View
     private func setupView() {
-        view.backgroundColor = Colors.background
+        view.backgroundColor = Colors.backgroundView
         
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = Colors.tabBarTint
+        appearance.backgroundColor = Colors.backgroundView
         appearance.shadowColor = UIColor.separator
         
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance
-        tabBar.tintColor = Colors.selectedItem
-        tabBar.unselectedItemTintColor = Colors.unselectedItem
+        tabBar.tintColor = Colors.selectedItemTint
+        tabBar.unselectedItemTintColor = Colors.inactiveIndicatorTint
     }
     
     //MARK: - Setup TabBar
@@ -41,10 +41,10 @@ final class TabBarController: UITabBarController {
         let trackerVC = TrackerViewController()
         let trackerNav = UINavigationController(rootViewController: trackerVC)
         let statisticsVC = StatisticsViewController()
-        //let statisticsNav = NavigationController(rootViewController: statisticsVC)
+        let statisticsNav = UINavigationController(rootViewController: statisticsVC)
         
         let trackerTabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: L10n.trackersScreenName,
             image: trackerIcon,
             selectedImage: nil
         )
@@ -52,7 +52,7 @@ final class TabBarController: UITabBarController {
         trackerVC.tabBarItem = trackerTabBarItem
         
         let statisticsTabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: L10n.statsScreenName,
             image: statisticsIcon,
             selectedImage: nil
         )
@@ -61,7 +61,7 @@ final class TabBarController: UITabBarController {
         
         viewControllers = [
             trackerNav,
-            statisticsVC
+            statisticsNav
         ]
     }
 }

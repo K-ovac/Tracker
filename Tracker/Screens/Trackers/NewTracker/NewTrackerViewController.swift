@@ -7,11 +7,14 @@
 
 import UIKit
 
+//MARK: NewTrackerViewControllerDelegate
 protocol NewTrackerViewControllerDelegate: AnyObject {
     func didTappedCreateNewTracker(_ tracker: Tracker, categoryTitle: String)
+    //метод для кнопки изменения трекера
+    func didTappedUpdateTracker(_ tracker: Tracker, categoryTitle: String)
 }
-
-final class NewTrackerViewController: UIViewController {
+//MARK: Класс, от которого наследуется класс экрана редактирования
+class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
     
@@ -29,8 +32,8 @@ final class NewTrackerViewController: UIViewController {
     
     private let nameTrackerTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название трекера"
-        textField.backgroundColor = Colors.bckgGrayDay
+        textField.placeholder = L10n.nameTrackerTextFieldPlaceholder
+        textField.backgroundColor = Colors.nameTextFieldBackground
         textField.layer.cornerRadius = Metrics.defCornerRadius
         textField.layer.masksToBounds = true
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +43,7 @@ final class NewTrackerViewController: UIViewController {
         
         let clearButton = UIButton(type: .system)
         clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-        clearButton.tintColor = .ypGray
+        clearButton.tintColor = Colors.clearButtonTextFieldBackground
         clearButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         clearButton.addTarget(nil, action: #selector(didTapClearText), for: .touchUpInside)
         
@@ -56,9 +59,9 @@ final class NewTrackerViewController: UIViewController {
     
     private let nameLimitLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = L10n.nameLimitLabel
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .systemRed
+        label.textColor = Colors.textLimitLabel
         label.textAlignment = .center
         label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -66,13 +69,13 @@ final class NewTrackerViewController: UIViewController {
         return label
     }()
     
-    private let categoryButton = NewTrackerViewController.setupOptionButton(title: "Категория")
-    private let scheduleButton = NewTrackerViewController.setupOptionButton(title: "Расписание")
+    private let categoryButton = NewTrackerViewController.setupOptionButton(title: L10n.categotyButton)
+    private let scheduleButton = NewTrackerViewController.setupOptionButton(title: L10n.scheduleButton)
     
     private let scheduleSubtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .secondaryLabel
+        label.textColor = Colors.optionSubtitleLabelText
         label.numberOfLines = 1
         label.isHidden = true
         return label
@@ -81,15 +84,15 @@ final class NewTrackerViewController: UIViewController {
     private let categorySubtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .secondaryLabel
+        label.textColor = Colors.optionSubtitleLabelText
         label.numberOfLines = 1
         return label
     }()
     
     private let separator: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray4
-        view.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        view.backgroundColor = Colors.optionSeparatorView
+        view.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
         return view
     }()
     
@@ -99,16 +102,16 @@ final class NewTrackerViewController: UIViewController {
     }()
     
     private let cancelButton = NewTrackerViewController.makeBottomButton(
-        title: "Отменить",
-        titleColor: .red,
+        title: L10n.cancelButton,
+        titleColor: Colors.cancelButtonText,
         background: .clear,
         border: true
     )
     
     private let createButton = NewTrackerViewController.makeBottomButton(
-        title: "Создать",
-        titleColor: .white,
-        background: Colors.unselectedItem,
+        title: L10n.createButton,
+        titleColor: Colors.buttonText,
+        background: Colors.buttonBackground,
         border: false
     )
     
@@ -146,7 +149,7 @@ final class NewTrackerViewController: UIViewController {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 0
-        stack.backgroundColor = Colors.bckgGrayDay
+        stack.backgroundColor = Colors.optionBackground
         stack.layer.cornerRadius = Metrics.defCornerRadius
         stack.layer.masksToBounds = true
         return stack
@@ -189,9 +192,9 @@ final class NewTrackerViewController: UIViewController {
     
     // MARK: - Setup
     private func setupView() {
-        navigationItem.title = "Новая привычка"
-        view.backgroundColor = Colors.background
-                
+        navigationItem.title = L10n.newTrackerNavigationTitle
+        view.backgroundColor = Colors.backgroundView
+        
         scheduleButton.addSubview(scheduleSubtitleLabel)
         categoryButton.addSubview(categorySubtitleLabel)
         
@@ -276,7 +279,7 @@ final class NewTrackerViewController: UIViewController {
     private static func setupOptionButton(title: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
-        button.tintColor = .ypBlack
+        button.tintColor = Colors.textPrimary
         button.titleLabel?.font = .systemFont(ofSize: 17)
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -304,6 +307,7 @@ final class NewTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setTitleColor(titleColor, for: .normal)
+        button.setTitleColor(Colors.inactiveButtonText, for: .disabled)
         button.backgroundColor = background
         button.layer.cornerRadius = Metrics.defCornerRadius
         button.layer.masksToBounds = true
@@ -323,7 +327,7 @@ final class NewTrackerViewController: UIViewController {
         }
         
         let text = selectedWeekdays.count == 7
-        ? "Каждый день"
+        ? L10n.subLableAllDay
         : selectedWeekdays.sorted { $0.rawValue < $1.rawValue }
             .map { $0.shortTitle }
             .joined(separator: ", ")
@@ -343,7 +347,7 @@ final class NewTrackerViewController: UIViewController {
         let nameValid = !(nameTrackerTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
         let enabled = nameValid && !selectedWeekdays.isEmpty && (selectedColor != nil) && (selectedColor != nil)
         createButton.isEnabled = enabled
-        createButton.backgroundColor = enabled ? .ypBlack : Colors.unselectedItem
+        createButton.backgroundColor = enabled ? Colors.buttonBackground : Colors.inactiveButtonBackground
     }
     
     private func hideLimitLabel() {
@@ -366,7 +370,7 @@ final class NewTrackerViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    @objc private func didTapCreate() {
+    @objc func didTapCreate() {
         print("Нажата кнопка создать")
         guard let name = nameTrackerTextField.text,
               let emoji = selectedEmoji,
@@ -391,7 +395,7 @@ final class NewTrackerViewController: UIViewController {
     @objc private func didSetNameTracker() {
         updateCreateButtonState()
         let hasText = !(nameTrackerTextField.text?.isEmpty ?? true)
-            nameTrackerTextField.rightViewMode = hasText ? .always : .never
+        nameTrackerTextField.rightViewMode = hasText ? .always : .never
         hideLimitLabel()
         print("В поле ввода введен символ")
     }
@@ -573,5 +577,59 @@ extension NewTrackerViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
+    }
+}
+
+extension NewTrackerViewController {
+    
+    var currentName: String? {
+        nameTrackerTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty == false
+        ? nameTrackerTextField.text
+        : nil
+    }
+    
+    var currentEmoji: String? {
+        selectedEmoji
+    }
+    
+    var currentColor: UIColor? {
+        selectedColor
+    }
+    
+    var currentSchedule: Set<Weekday>? {
+        selectedWeekdays.isEmpty ? nil : selectedWeekdays
+    }
+    
+    var currentCategory: String? {
+        selectedCategoryName
+    }
+    
+    func setCreateButtonTitle(_ title: String) {
+        createButton.setTitle(title, for: .normal)
+    }
+    
+    func insertIntoContentStack(_ view: UIView, at index: Int, spacing: CGFloat? = nil) {
+        contentStackView.insertArrangedSubview(view, at: index)
+        if let spacing = spacing, index < contentStackView.arrangedSubviews.count - 1 {
+            contentStackView.setCustomSpacing(spacing, after: view)
+        }
+    }
+    
+    func configureForEditing(tracker: Tracker, category: String) {
+        nameTrackerTextField.text = tracker.name
+        selectedEmoji = tracker.emoji
+        selectedColor = tracker.color
+        selectedWeekdays = tracker.schedule
+        selectedCategoryName = category
+        
+        updateCategoryButtonTitle()
+        updateScheduleButtonTitle()
+        updateCreateButtonState()
+        nameTrackerTextField.rightViewMode = .always
+    }
+    
+    func setCreateButtonAction(_ action: @escaping () -> Void) {
+        createButton.removeTarget(nil, action: nil, for: .allEvents)
+        createButton.addAction(UIAction { _ in action() }, for: .touchUpInside)
     }
 }

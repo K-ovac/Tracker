@@ -8,16 +8,16 @@ import UIKit
 
 final class OnboardingViewController: UIViewController {
     //MARK: Properties
-    private let def = DefaultsService()
+    private let defaultsService = DefaultsService()
     private let model: OnboardingModel
     
     //MARK: UI
-    private lazy var backgrImage = UIImageView()
+    private lazy var backgroundImageView = UIImageView()
     private lazy var descriptionLabel = UILabel()
     private lazy var startButton = makeBottomButton(
-        title: "Вот это технологии!",
-        titleColor: Colors.textButton,
-        backgrColor: Colors.backgroundButton
+        title: L10n.startButton,
+        titleColor: Colors.buttonText,
+        backgrColor: Colors.buttonBackground
     )
     
     //MARK: Inits
@@ -42,22 +42,22 @@ final class OnboardingViewController: UIViewController {
     //MARK: Setup View
     private func setupView() {
         view.clipsToBounds = true
-        view.addSubview(backgrImage)
+        view.addSubview(backgroundImageView)
         view.addSubview(descriptionLabel)
         view.addSubview(startButton)
     }
     
     //MARK: Setup Layout
     private func setupLayout() {
-        [backgrImage, descriptionLabel, startButton].forEach {
+        [backgroundImageView, descriptionLabel, startButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         NSLayoutConstraint.activate([
-            backgrImage.topAnchor.constraint(equalTo: view.topAnchor),
-            backgrImage.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            backgrImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            backgrImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
         NSLayoutConstraint.activate([
@@ -76,10 +76,10 @@ final class OnboardingViewController: UIViewController {
     
     //MARK: Configure UI
     private func configureUI() {
-        backgrImage.image = model.image
+        backgroundImageView.image = model.image
         
-        backgrImage.contentMode = .scaleAspectFill
-        backgrImage.clipsToBounds = true
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
         
         descriptionLabel.text = model.description
         
@@ -116,7 +116,7 @@ final class OnboardingViewController: UIViewController {
     //MARK: Actions
     @objc private func didTapStartButton() {
         print("Нажата кнопка 'Вот это технологии!'")
-        def.sawOnboard = true
+        defaultsService.sawOnboard = true
         
         guard
             let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

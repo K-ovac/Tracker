@@ -21,10 +21,10 @@ final class CategoryViewController: UIViewController {
     
     //MARK: - UI
     private lazy var addCategoryButton = setupBottomButton(
-        title: "Добавить категорию"
+        title: L10n.addCategoryButton
     )
     private lazy var placeholderLabel = setupPlaceholderLabel(
-        titleText: "Привычки и события можно \n объединять по смыслу"
+        titleText: L10n.caregoryScreenPlaceholderText
     )
     private let categoryTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -47,9 +47,9 @@ final class CategoryViewController: UIViewController {
     
     //MARK: - SetupView
     private func setupView() {
-        navigationItem.title = "Категория"
+        navigationItem.title = L10n.categoryNavigationTitle
         
-        view.backgroundColor = Colors.background
+        view.backgroundColor = Colors.backgroundView
         
         [
             categoryTableView,
@@ -99,8 +99,8 @@ final class CategoryViewController: UIViewController {
     private func setupBottomButton(title: String) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
-        button.setTitleColor(.ypWhite, for: .normal)
-        button.backgroundColor = .ypBlack
+        button.setTitleColor(Colors.buttonText, for: .normal)
+        button.backgroundColor = Colors.buttonBackground
         button.contentHorizontalAlignment = .center
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
         
@@ -217,3 +217,4 @@ extension CategoryViewController: NewCategoryViewControllerDelegate {
         categoryViewModel.addCategory(title: category.name)
     }
 }
+

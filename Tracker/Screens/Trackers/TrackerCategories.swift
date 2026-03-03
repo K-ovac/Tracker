@@ -16,7 +16,7 @@ final class TrackerHeaderView: UICollectionReusableView {
     private let categoryNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 19, weight: .bold)
-        label.textColor = .ypBlack
+        label.textColor = Colors.textPrimary
         return label
     }()
     
@@ -36,7 +36,7 @@ final class TrackerHeaderView: UICollectionReusableView {
         categoryNameLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            categoryNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            categoryNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
             categoryNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             categoryNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])

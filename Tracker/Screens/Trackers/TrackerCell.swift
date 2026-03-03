@@ -9,6 +9,8 @@ import UIKit
 //MARK: TrackerCellDelegate
 protocol TrackerCellDelegate: AnyObject {
     func didTrackerCellButtonTapped(_ cell: TrackerCell)
+    func didTapEdit(trackerId: UUID)
+    func didTapDelete(trackerId: UUID)
 }
 
 final class TrackerCell: UICollectionViewCell {
@@ -31,7 +33,7 @@ final class TrackerCell: UICollectionViewCell {
         let label = UILabel()
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 12
-        label.backgroundColor = Colors.backEmoji
+        label.backgroundColor = Colors.backgroundEmojiLabelTrackerCell
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16)
         
@@ -41,7 +43,7 @@ final class TrackerCell: UICollectionViewCell {
     private let taskLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: Metrics.trackCellPrimTextH, weight: .medium)
-        label.textColor = .ypWhite
+        label.textColor = Colors.taskLabelTrackerCell
         label.numberOfLines = 2
         return label
     }()
@@ -62,6 +64,8 @@ final class TrackerCell: UICollectionViewCell {
         return button
     }()
     
+    private var contextMenuInteraction: UIContextMenuInteraction?
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,8 +83,12 @@ final class TrackerCell: UICollectionViewCell {
         contentView.layer.cornerRadius = Metrics.defCornerRadius
         contentView.layer.masksToBounds = true
         
-        [colorView, emojiLabel, taskLabel, daysLabel, endTrackerButton].forEach {
+        [colorView, daysLabel, endTrackerButton].forEach {
             contentView.addSubview($0)
+        }
+        
+        [emojiLabel, taskLabel].forEach {
+            colorView.addSubview($0)
         }
     }
     
@@ -123,17 +131,6 @@ final class TrackerCell: UICollectionViewCell {
         ])
     }
     
-    private func daysTitle(for count: Int) -> String {
-        switch count {
-        case 1:
-            return "1 день"
-        case 2...4:
-            return "\(count) дня"
-        default:
-            return "\(count) дней"
-        }
-    }
-    
     // MARK: - Setup Actions
     private func setupActions() {
         endTrackerButton.addTarget(
@@ -143,6 +140,14 @@ final class TrackerCell: UICollectionViewCell {
         )
     }
     
+    // MARK: - Context Menu
+        private func setupContextMenu() {
+            let interaction = UIContextMenuInteraction(delegate: self)
+            colorView.addInteraction(interaction)
+            colorView.isUserInteractionEnabled = true
+        }
+    
+    //MARK: Configure Cell
     func configure(with tracker: Tracker, completedDates: [Date], selectedDate: Date) {
         self.trackerId = tracker.id
         colorView.backgroundColor = tracker.color
@@ -158,12 +163,37 @@ final class TrackerCell: UICollectionViewCell {
         let daysCount = completedDates
             .filter { $0 >= tracker.dayCreatedTracker && $0 <= selectedDate }
             .count
-        daysLabel.text = daysTitle(for: daysCount)
+        daysLabel.text = L10n.daysTitle(for: daysCount)
+        
+        setupContextMenu()
     }
     
     //MARK: Actions
     @objc
     private func didTapEndTracker() {
         delegate?.didTrackerCellButtonTapped(self)
+    }
+}
+
+// MARK: - UIContextMenuInteractionDelegate
+extension TrackerCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+                                configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let trackerId = trackerId else { return nil }
+        
+        return UIContextMenuConfiguration(identifier: trackerId as NSCopying,
+                                          previewProvider: nil) { [weak self] _ in
+            guard let self = self else { return nil }
+            
+            let editAction = UIAction(title: L10n.editActionTitle) { _ in
+                self.delegate?.didTapEdit(trackerId: trackerId)
+            }
+            
+            let deleteAction = UIAction(title: L10n.deleteActionTitle, attributes: .destructive) { _ in
+                self.delegate?.didTapDelete(trackerId: trackerId)
+            }
+            
+            return UIMenu(children: [editAction, deleteAction])
+        }
     }
 }

@@ -22,8 +22,8 @@ final class OnboardingPageViewController: UIPageViewController {
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         
-        pageControl.currentPageIndicatorTintColor = .ypBlack
-        pageControl.pageIndicatorTintColor = .ypBlackOp30
+        pageControl.currentPageIndicatorTintColor = Colors.currentIndicatorTint
+        pageControl.pageIndicatorTintColor = Colors.pageIndicatorTint
         
         return pageControl
     }()

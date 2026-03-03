@@ -21,7 +21,7 @@ final class ScheduleCell: UITableViewCell {
     
     private let daySwitch: UISwitch = {
         let sw = UISwitch()
-        sw.onTintColor = .ypBlue
+        sw.onTintColor = Colors.selectedItemTint
         return sw
     }()
     
@@ -40,7 +40,7 @@ final class ScheduleCell: UITableViewCell {
         selectionStyle = .none
         contentView.addSubview(titleLabel)
         contentView.addSubview(daySwitch)
-        contentView.backgroundColor = Colors.bckgGrayDay
+        contentView.backgroundColor = Colors.optionBackground
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         daySwitch.translatesAutoresizingMaskIntoConstraints = false

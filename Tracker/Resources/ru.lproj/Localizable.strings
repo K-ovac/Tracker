@@ -1,0 +1,89 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Максим Лозебной on 26.02.2026.
+  
+*/
+
+//MARK: ALL
+"completeButton" = "Готово";
+
+//MARK: Onboard
+"onboard_1_label" = "Отслеживайте только то, что хотите";
+"onboard_2_label" = "Даже если это не литры воды и йога";
+"startButton" = "Вот это технологии!";
+
+//MARK: Tracker
+"trackers_screen_name" = "Трекеры";
+"trackersScreen_placeholderText" = "Что будем отслеживать?";
+"trackersScreenPlaceholderTextForNotFound" = "Ничего не найдено";
+"searchField_placeholder" = "Поиск";
+"filtresButton" = "Фильтры";
+
+//MARK: Filters
+"filters_screen_name" = "Фильтры";
+"allTrackers" = "Все трекеры";
+"todayTrackers" = "Трекеры сегодня";
+"completedTrackers" = "Завершенные";
+"notCompletedTrackers" = "Незавершенные";
+
+//MARK: New TRacker
+"newTracker_navigationTitle" = "Новая привычка";
+"nameTracker_textField_placeholder" = "Введите название трекера";
+"name_limitLabel" = "Ограничение 38 символов";
+"categotyButton" = "Категория";
+"scheduleButton" = "Расписание";
+"emojiHeader" = "Emoji";
+"colorHeader" = "Цвета";
+"cancelButton" = "Отменить";
+"createButton" = "Создать";
+"subLable_allDay" = "Каждый день";
+
+//MARK: Category
+"category_navigationTitle" = "Категория";
+"caregoryScreen_placeholderText" = "Привычки и события можно\nобъединять по смыслу";
+"addCategoryButton" = "Добавить категорию";
+
+//MARK: New Category
+"newCategory_navigationTitle" = "Новая категория";
+"nameCategory_textField_placeholder" = "Введите название категории";
+
+//MARK: Schedule
+"schedule_navigationTitle" = "Расписание";
+
+//full name day
+"monday" = "Понедельник";
+"tuesday" = "Вторник";
+"wednesday" = "Среда";
+"thursday" = "Четверг";
+"friday" = "Пятница";
+"saturday" = "Суббота";
+"sunday" = "Воскресенье";
+
+//short name day
+"mon" = "Пн";
+"tue" = "Вт";
+"wed" = "Ср";
+"thu" = "Чт";
+"fri" = "Пт";
+"sat" = "Сб";
+"sun" = "Вс";
+
+//MARK: Stats Screen
+"stats_screen_name" = "Статистика";
+"statsScreen_placeholderText" = "Анализировать пока нечего";
+"bestPeriod" = "Лучший период";
+"perfectDays" = "Идеальные дни";
+"trackersCompleted" = "Трекеров завершено";
+"avgScore" = "Среднее значение";
+
+//MARK: Context menu
+"delete_alert_title" = "Уверены что хотите удалить трекер?";
+"delete_action_title" = "Удалить";
+"cancelDelete_action_title" = "Отмена";
+"edit_action_title" = "Редактировать";
+
+//MARK: Edit Screen
+"edit_screen_name" = "Редактирование привычки";
+"save_button_title" = "Сохранить";

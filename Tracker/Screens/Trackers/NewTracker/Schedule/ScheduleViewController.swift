@@ -25,9 +25,9 @@ final class ScheduleViewController: UIViewController {
         return tableView
     }()
     private let completeButton = makeBottomButton(
-        title: "Готово",
-        titleColor: .ypWhite,
-        background: Colors.backgroundButton
+        title: L10n.completeButton,
+        titleColor: Colors.buttonText,
+        background: Colors.buttonBackground
     )
     
     //MARK: Lifecycle
@@ -40,8 +40,8 @@ final class ScheduleViewController: UIViewController {
     
     //MARK: Setups
     private func setupView() {
-        navigationItem.title = "Расписание"
-        view.backgroundColor = Colors.background
+        navigationItem.title = L10n.scheduleNavigationTitle
+        view.backgroundColor = Colors.backgroundView
         
         view.addSubview(tableView)
         view.addSubview(completeButton)

@@ -8,48 +8,104 @@ import UIKit
 
 enum Colors {
 
-    static var background: UIColor {
+    static var backgroundView: UIColor {
         asset("ypWhite")
     }
-
+    
     static var textPrimary: UIColor {
         asset("ypBlack")
     }
-
-    static var textButton: UIColor {
-        asset("ypWhite")
-    }
     
-    static var backgroundButton: UIColor {
+    static var buttonBackground: UIColor {
         asset("ypBlack")
     }
     
-    static var tabBarTint: UIColor {
-        asset("ypWhite")
+    static var backgroundEmojiLabelTrackerCell: UIColor {
+        asset("ypWhiteOp30")
     }
     
-    static var selectedItem: UIColor {
+    static var taskLabelTrackerCell: UIColor {
+        asset("ypWhiteStatic")
+    }
+    
+    static var backgroungEmojiLabelOptionCell: UIColor {
+        asset("ypLightGray")
+    }
+    
+    static var filtersButtonTint: UIColor {
+        asset("ypWhiteStatic")
+    }
+    
+    static var filtersButtonBackground: UIColor {
         asset("ypBlue")
     }
     
-    static var unselectedItem: UIColor {
+    static var nameTextFieldBackground: UIColor {
+        asset("ypBackground")
+    }
+    
+    static var clearButtonTextFieldBackground: UIColor {
         asset("ypGray")
     }
     
-    static var tintButton: UIColor {
+    static var textLimitLabel: UIColor {
+        asset("ypRed")
+    }
+    
+    static var optionSubtitleLabelText: UIColor {
+        asset("ypGray")
+    }
+    
+    static var optionSeparatorView: UIColor {
+        asset("ypGray")
+    }
+    
+    static var buttonText: UIColor {
         asset("ypWhite")
     }
     
-    static var backEmoji: UIColor {
-        asset("ypWhite_op30")
+    static var cancelButtonText: UIColor {
+        asset("ypRed")
     }
     
-    static var bckgGrayDay: UIColor {
-        asset("ypGray_op30")
+    static var optionBackground: UIColor {
+        asset("ypBackground")
     }
     
-    static var fieldText: UIColor {
+    static var inactiveButtonBackground: UIColor {
         asset("ypGray")
+    }
+    
+    static var inactiveButtonText: UIColor {
+        asset("ypWhiteStatic")
+    }
+    
+    static var selectedItemTint: UIColor {
+        asset("ypBlue")
+    }
+    
+    static var currentIndicatorTint: UIColor {
+        asset("ypBlack")
+    }
+    
+    static var inactiveIndicatorTint: UIColor {
+        asset("ypGray")
+    }
+    
+    static var pageIndicatorTint: UIColor {
+        asset("ypBackground")
+    }
+    
+    static var borderRed: UIColor {
+        asset("ypRedBorder")
+    }
+    
+    static var borderGreen: UIColor {
+        asset("ypGreenBorder")
+    }
+    
+    static var borderBlue: UIColor {
+        asset("ypBlueBorder")
     }
 
     // MARK: - Private
@@ -62,5 +118,3 @@ enum Colors {
         return color
     }
 }
-
-

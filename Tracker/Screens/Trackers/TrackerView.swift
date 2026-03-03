@@ -10,51 +10,31 @@ import UIKit
 //MARK: TrackerViewDelegate
 protocol TrackerViewDelegate: AnyObject {
     func didTapFiltersButton()
-    //func datePickerValueChanged(_ sender: UIDatePicker)
 }
 
 final class TrackerView: UIView {
     //MARK: Properties
     weak var delegate: TrackerViewDelegate?
-    
-    var collectionView: UICollectionView {
-        trackerCollectionView
-    }
-    
     // MARK: - UI
     lazy var filtersButton = makeFiltersButton(
-        title: "Фильтры",
-        tintColor: .ypWhite,
-        bckgColor: .ypBlue,
+        title: L10n.filtresButton,
+        tintColor: Colors.filtersButtonTint,
+        bckgColor: Colors.filtersButtonBackground,
         titleSize: 17,
     )
     
-    private let nameTrackerScreenLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Трекеры"
-        label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        label.textAlignment = .left
-        return label
-    }()
-    
-    private let searchField: UISearchBar = {
-        let searchField = UISearchBar()
-        searchField.placeholder = "Поиск"
-        searchField.backgroundImage = UIImage()
-        return searchField
-    }()
-    
     lazy var backStack: UIStackView = setupBackgroundStack()
     
-    private let trackerCollectionView: UICollectionView = {
+    private lazy var trackerCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 9
         layout.minimumInteritemSpacing = 9
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = Colors.background
+        collectionView.backgroundColor = .clear
         collectionView.alwaysBounceVertical = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 66, right: 0)
         return collectionView
     }()
     
@@ -73,45 +53,33 @@ final class TrackerView: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        backgroundColor = Colors.background
+        backgroundColor = Colors.backgroundView
         addSubviews(
             
             trackerCollectionView,
-            nameTrackerScreenLabel,
-            searchField,
             filtersButton,
-            backStack
+            backStack,
         )
     }
     
     private func setupLayout() {
-        [backStack, trackerCollectionView, nameTrackerScreenLabel, searchField, filtersButton].forEach {
+        [
+            backStack,
+            trackerCollectionView,
+            filtersButton,
+        ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         NSLayoutConstraint.activate([
-            nameTrackerScreenLabel.topAnchor.constraint(equalTo: topAnchor, constant: Metrics.nameTrScrLabelTop),
-            nameTrackerScreenLabel.widthAnchor.constraint(equalToConstant: Metrics.nameTrScrLabelW),
-            nameTrackerScreenLabel.heightAnchor.constraint(equalToConstant: Metrics.nameTrScrLabelH),
-            nameTrackerScreenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.l),
-        ])
-        
-        NSLayoutConstraint.activate([
-            searchField.topAnchor.constraint(equalTo: topAnchor, constant: Metrics.searchFieldtop),
-            searchField.heightAnchor.constraint(equalToConstant: Metrics.searchFieldH),
-            searchField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Metrics.t),
-            searchField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.l),
-        ])
-        
-        NSLayoutConstraint.activate([
-            backStack.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 230),
+            backStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 220),
             backStack.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
         
         NSLayoutConstraint.activate([
-            trackerCollectionView.topAnchor.constraint(equalTo: searchField.bottomAnchor),
-            trackerCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.l),
-            trackerCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Metrics.t),
+            trackerCollectionView.topAnchor.constraint(equalTo: topAnchor, constant: 24),
+            trackerCollectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            trackerCollectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             trackerCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
         
@@ -146,7 +114,7 @@ final class TrackerView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         
         let questionTitle = UILabel()
-        questionTitle.text = "Что будем отслеживать?"
+        questionTitle.text = L10n.trackersScreenPlaceholderText
         questionTitle.textAlignment = .center
         questionTitle.textColor = Colors.textPrimary
         questionTitle.font = UIFont.systemFont(ofSize: 12, weight: .medium)
@@ -169,6 +137,14 @@ final class TrackerView: UIView {
         return stack
     }
     
+    func updatePlaceholder(image: UIImage, description: String) {
+        guard let imageView = backStack.arrangedSubviews.first as? UIImageView,
+              let label = backStack.arrangedSubviews.last as? UILabel else { return }
+        
+        imageView.image = image
+        label.text = description
+    }
+    
     // MARK: - Setup Actions
     private func setupActions() {
         filtersButton.addTarget(self,
@@ -179,6 +155,12 @@ final class TrackerView: UIView {
     // MARK: - Actions
     @objc private func didTapFilters() {
         delegate?.didTapFiltersButton()
+    }
+}
+
+extension TrackerView {
+    var collectionView: UICollectionView {
+        trackerCollectionView
     }
 }
 

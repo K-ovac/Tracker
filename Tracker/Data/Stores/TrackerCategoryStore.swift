@@ -68,6 +68,13 @@ final class TrackerCategoryStore: NSObject {
     func fetchCategories() -> [TrackerCategoryCoreData] {
         return fetchedResultsController?.fetchedObjects ?? []
     }
+    
+    func deleteAllCategories() throws {
+        let request: NSFetchRequest<NSFetchRequestResult> = TrackerCategoryCoreData.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+        try context.execute(deleteRequest)
+        try context.save()
+    }
 }
 
 //MARK: Ext NSFetchedResultsControllerDelegate

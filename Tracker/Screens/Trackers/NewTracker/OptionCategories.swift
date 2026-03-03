@@ -15,7 +15,7 @@ final class OptionHeaderViewController: UICollectionReusableView {
     private let categoryNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 19, weight: .bold)
-        label.textColor = .ypBlack
+        label.textColor = Colors.textPrimary
         return label
     }()
     
