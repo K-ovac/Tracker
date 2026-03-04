@@ -18,18 +18,19 @@ final class NewCategoryViewController: UIViewController {
     //MARK: UI
     private lazy var nameCategoryTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название категории"
-        textField.backgroundColor = Colors.bckgGrayDay
+        textField.placeholder = L10n.nameCategoryTextFieldPlaceholder
+        textField.backgroundColor = Colors.nameTextFieldBackground
         textField.layer.cornerRadius = Metrics.defCornerRadius
         textField.layer.masksToBounds = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.heightAnchor.constraint(equalToConstant: 75).isActive = true
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         textField.leftViewMode = .always
+        textField.returnKeyType = .done
         
         let clearButton = UIButton(type: .system)
         clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-        clearButton.tintColor = .ypGray
+        clearButton.tintColor = Colors.clearButtonTextFieldBackground
         clearButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         clearButton.addTarget(nil, action: #selector(didTapClearText), for: .touchUpInside)
         
@@ -43,12 +44,14 @@ final class NewCategoryViewController: UIViewController {
         return textField
     }()
     
-    private lazy var completeCategoryButton = setupBottomButton(title: "Готово")
+    private lazy var completeCategoryButton = setupBottomButton(
+        title: L10n.completeButton
+    )
     
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        nameCategoryTextField.delegate = self
         setupView()
         setupLayout()
         setupActions()
@@ -57,11 +60,11 @@ final class NewCategoryViewController: UIViewController {
     
     //MARK: setupView
     private func setupView() {
-        navigationItem.title = "Новая категория"
-        view.backgroundColor = Colors.background
+        navigationItem.title = L10n.newCategoryNavigationTitle
+        view.backgroundColor = Colors.backgroundView
     
         view.addSubview(nameCategoryTextField)
-        view.addSubview(completeCategoryButton)
+        view.addSubview(completeCategoryButton)        
     }
     
     //MARK: setupLayout
@@ -87,8 +90,9 @@ final class NewCategoryViewController: UIViewController {
     private func setupBottomButton(title: String) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
-        button.setTitleColor(.ypWhite, for: .normal)
-        button.backgroundColor = .ypBlack
+        button.setTitleColor(Colors.buttonText, for: .normal)
+        button.setTitleColor(Colors.inactiveButtonText, for: .disabled)
+        button.backgroundColor = Colors.buttonBackground
         button.contentHorizontalAlignment = .center
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
         
@@ -104,7 +108,7 @@ final class NewCategoryViewController: UIViewController {
         let enabled = nameValid
         
         completeCategoryButton.isEnabled = enabled
-        completeCategoryButton.backgroundColor = enabled ? .ypBlack : Colors.unselectedItem
+        completeCategoryButton.backgroundColor = enabled ? Colors.buttonBackground : Colors.inactiveButtonBackground
     }
     
     // MARK: - Setup Actions
@@ -138,5 +142,13 @@ final class NewCategoryViewController: UIViewController {
         nameCategoryTextField.rightViewMode = .never
         updateCompleteButtonState()
         print("Поле названия трекера очищено")
+    }
+}
+
+//MARK: Ext NewCategoryViewController: UITextFieldDelegate с методом textFieldShouldReturn
+extension NewCategoryViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

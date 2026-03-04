@@ -20,7 +20,6 @@ final class CategoryCell: UITableViewCell {
     
     private let checkmark: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "checkmark"))
-        imageView.tintColor = .ypGray
         imageView.isHidden = true
         
         return imageView
@@ -40,7 +39,7 @@ final class CategoryCell: UITableViewCell {
     //MARK: - SetupView
     private func setupView() {
         selectionStyle = .none
-        contentView.backgroundColor = .ypGrayOp30
+        contentView.backgroundColor = Colors.optionBackground
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(checkmark)
@@ -71,7 +70,7 @@ final class CategoryCell: UITableViewCell {
         
         if isSelected {
             checkmark.isHidden = false
-            checkmark.tintColor = .ypBlue
+            checkmark.tintColor = Colors.selectedItemTint
         } else {
             checkmark.isHidden = true
         }

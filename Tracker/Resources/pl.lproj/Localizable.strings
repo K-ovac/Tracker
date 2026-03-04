@@ -1,0 +1,99 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Максим Лозебной on 26.02.2026.
+  
+*/
+
+//MARK: - General
+
+"completeButton" = "Gotowe";
+
+//MARK: - Onboard
+
+"onboard_1_label" = "Śledź tylko to, co chcesz";
+"onboard_2_label" = "Nawet jeśli nie są to litry wody i jogi";
+"startButton" = "To jest technologia!";
+
+//MARK: - Tracker
+
+"trackers_screen_name" = "Trackery";
+"trackersScreen_placeholderText" = "Co będziemy śledzić?";
+"trackersScreen_placeholderTextForNotFound" = "Nic nie znaleziono";
+"searchField_placeholder" = "Szukaj";
+"filtersButton" = "Filtry";
+
+//MARK: - Filters
+
+"filters_screen_name" = "Filtry";
+"allTrackers" = "Wszystkie trackery";
+"todayTrackers" = "Trackery dzisiaj";
+"completedTrackers" = "Zakończone";
+"notCompletedTrackers" = "Nieukończony";
+
+//MARK: - New Tracker
+
+"newTracker_navigationTitle" = "Nowy nawyk";
+"nameTracker_textField_placeholder" = "Wpisz nazwę trackera";
+"name_limitLabel" = "Limit 38 znaków";
+"categotyButton" = "Kategoria";
+"scheduleButton" = "Rozkład";
+"emojiHeader" = "Emoji";
+"colorHeader" = "Kolory";
+"cancelButton" = "Anuluj";
+"createButton" = "Utwórz";
+"subLabel_allDay" = "Codziennie";
+
+//MARK: - Category
+
+"category_navigationTitle" = "Kategoria";
+"categoryScreen_placeholderText" = "Nawyki i zdarzenia można\nłączyć według znaczeni";
+"addCategoryButton" = "Dodaj kategorię";
+
+//MARK: - New Category
+
+"newCategory_navigationTitle" = "Nowa kategoria";
+"nameCategory_textField_placeholder" = "Wpisz nazwę trackera";
+
+//MARK: - Schedule
+"schedule_navigationTitle" = "Rozkład";
+
+//full name day
+"monday" = "Poniedziałek";
+"tuesday" = "Wtorek";
+"wednesday" = "Środa";
+"thursday" = "Czwartek";
+"friday" = "Piątek";
+"saturday" = "Sobota";
+"sunday" = "Niedziela";
+
+//short name day
+"mon" = "Ponie.";
+"tue" = "Wtor.";
+"wed" = "Środ.";
+"thu" = "Czwar.";
+"fri" = "Piąt.";
+"sat" = "Sob.";
+"sun" = "Nied.";
+
+//MARK: - Stats Screen
+
+"stats_screen_name" = "Statystyk";
+"statsScreen_placeholderText" = "nie ma jeszcze nic do przeanalizowania";
+"bestPeriod" = "Najlepszy okres";
+"perfectDays" = "Idealne dni";
+"trackersCompleted" = "Trackerów zakończone";
+"avgScore" = "Średnia";
+
+//MARK: - Context menu
+
+"delete_alert_title" = "Czy na pewno chcesz usunąć tracker?";
+"delete_action_title" = "Usunąć";
+"cancelDelete_action_title" = "Anuluj";
+"edit_action_title" = "Edytuj";
+
+//MARK: - Edit Screen
+
+"edit_screen_name" = "Edycja nawyku";
+"save_button_title" = "Zachować";

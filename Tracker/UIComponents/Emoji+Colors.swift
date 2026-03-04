@@ -55,9 +55,9 @@ enum TrackerSection: Int, CaseIterable {
     var title: String {
         switch self {
         case .emojis:
-            return "Emoji"
+            return L10n.emojiHeader
         case .colors:
-            return "Цвет"
+            return L10n.colorHeader
         }
     }
 }

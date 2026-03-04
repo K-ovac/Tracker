@@ -111,6 +111,25 @@ final class TrackerRecordStore: NSObject {
         
         try context.save()
     }
+    
+    func fetchAllRecordsGroupedByTracker() -> [UUID: [Date]] {
+        let records = fetchedResultsController?.fetchedObjects ?? []
+        var result: [UUID: [Date]] = [:]
+        
+        for record in records {
+            guard let trackerId = record.tracker?.id, let date = record.date else { continue }
+            result[trackerId, default: []].append(Calendar.current.startOfDay(for: date))
+        }
+        
+        return result
+    }
+    
+    func deleteAllRecords() throws {
+        let request: NSFetchRequest<NSFetchRequestResult> = TrackerRecordCoreData.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+        try context.execute(deleteRequest)
+        try context.save()
+    }
 }
 
 //MARK: Ext NSFetchedResultsControllerDelegate

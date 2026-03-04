@@ -14,11 +14,11 @@ struct OnboardingModel {
     static let models: [OnboardingModel] = [
         OnboardingModel(
             image: UIImage(named: "onboard_1"),
-            description: "Отслеживайте только то, что хотите"
+            description: L10n.onboard1Label
         ),
         OnboardingModel(
             image: UIImage(named: "onboard_2"),
-            description: "Даже если это не литры воды и йога"
+            description: L10n.onboard2Label
         )
     ]
 }

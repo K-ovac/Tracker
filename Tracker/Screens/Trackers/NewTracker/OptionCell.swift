@@ -54,7 +54,7 @@ final class OptionCell: UICollectionViewCell {
         contentView.layer.borderWidth = 0
         
         if isSelected {
-            contentView.backgroundColor = .lightGray
+            contentView.backgroundColor = Colors.backgroungEmojiLabelOptionCell
             contentView.layer.cornerRadius = 16
         } else {
             contentView.backgroundColor = .clear

@@ -120,6 +120,43 @@ final class TrackerStore: NSObject {
             )
         }
     }
+    
+    func deleteTracker(id: UUID) throws {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: Constants.predicateFormat_1, id as CVarArg)
+        
+        if let trackerDeleted = try context.fetch(request).first {
+            context.delete(trackerDeleted)
+            
+            try context.save()
+        }
+    }
+    
+    func updateTracker(tracker: Tracker, categoryTitle: String) throws {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: Constants.predicateFormat_1, tracker.id as CVarArg)
+
+        guard let trackerCoreData = try context.fetch(request).first else {
+            return
+        }
+
+        trackerCoreData.name = tracker.name
+        trackerCoreData.emoji = tracker.emoji
+        trackerCoreData.setColor(tracker.color)
+        trackerCoreData.setSchedule(tracker.schedule)
+
+        let categoryCoreData = categoryStore.fetchOrCreateCategory(title: categoryTitle)
+        trackerCoreData.trackerCategory = categoryCoreData
+
+        try context.save()
+    }
+    
+    func deleteAllTrackers() throws {
+        let request: NSFetchRequest<NSFetchRequestResult> = TrackerCoreData.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+        try context.execute(deleteRequest)
+        try context.save()
+    }
 }
 
 //MARK: Ext NSFetchedResultsControllerDelegate
