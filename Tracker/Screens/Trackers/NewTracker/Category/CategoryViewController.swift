@@ -24,7 +24,7 @@ final class CategoryViewController: UIViewController {
         title: L10n.addCategoryButton
     )
     private lazy var placeholderLabel = setupPlaceholderLabel(
-        titleText: L10n.caregoryScreenPlaceholderText
+        titleText: L10n.categoryScreenPlaceholderText
     )
     private let categoryTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)

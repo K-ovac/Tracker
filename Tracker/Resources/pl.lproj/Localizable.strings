@@ -6,29 +6,34 @@
   
 */
 
-//MARK: ALL
+//MARK: - General
+
 "completeButton" = "Gotowe";
 
-//MARK: Onboard
+//MARK: - Onboard
+
 "onboard_1_label" = "Śledź tylko to, co chcesz";
 "onboard_2_label" = "Nawet jeśli nie są to litry wody i jogi";
 "startButton" = "To jest technologia!";
 
-//MARK: Tracker
+//MARK: - Tracker
+
 "trackers_screen_name" = "Trackery";
 "trackersScreen_placeholderText" = "Co będziemy śledzić?";
 "trackersScreen_placeholderTextForNotFound" = "Nic nie znaleziono";
 "searchField_placeholder" = "Szukaj";
-"filtresButton" = "Filtry";
+"filtersButton" = "Filtry";
 
-//MARK: Filters
+//MARK: - Filters
+
 "filters_screen_name" = "Filtry";
 "allTrackers" = "Wszystkie trackery";
 "todayTrackers" = "Trackery dzisiaj";
 "completedTrackers" = "Zakończone";
 "notCompletedTrackers" = "Nieukończony";
 
-//MARK: New TRacker
+//MARK: - New Tracker
+
 "newTracker_navigationTitle" = "Nowy nawyk";
 "nameTracker_textField_placeholder" = "Wpisz nazwę trackera";
 "name_limitLabel" = "Limit 38 znaków";
@@ -38,19 +43,20 @@
 "colorHeader" = "Kolory";
 "cancelButton" = "Anuluj";
 "createButton" = "Utwórz";
-"subLable_allDay" = "Codziennie";
-"subLable_allDay" = "Codziennie";
+"subLabel_allDay" = "Codziennie";
 
-//MARK: Category
+//MARK: - Category
+
 "category_navigationTitle" = "Kategoria";
-"caregoryScreen_placeholderText" = "Nawyki i zdarzenia można\nłączyć według znaczeni";
+"categoryScreen_placeholderText" = "Nawyki i zdarzenia można\nłączyć według znaczeni";
 "addCategoryButton" = "Dodaj kategorię";
 
-//MARK: New Category
+//MARK: - New Category
+
 "newCategory_navigationTitle" = "Nowa kategoria";
 "nameCategory_textField_placeholder" = "Wpisz nazwę trackera";
 
-//MARK: Schedule
+//MARK: - Schedule
 "schedule_navigationTitle" = "Rozkład";
 
 //full name day
@@ -71,7 +77,8 @@
 "sat" = "Sob.";
 "sun" = "Nied.";
 
-//MARK: Stats Screen
+//MARK: - Stats Screen
+
 "stats_screen_name" = "Statystyk";
 "statsScreen_placeholderText" = "nie ma jeszcze nic do przeanalizowania";
 "bestPeriod" = "Najlepszy okres";
@@ -79,12 +86,14 @@
 "trackersCompleted" = "Trackerów zakończone";
 "avgScore" = "Średnia";
 
-//MARK: Context menu
+//MARK: - Context menu
+
 "delete_alert_title" = "Czy na pewno chcesz usunąć tracker?";
 "delete_action_title" = "Usunąć";
 "cancelDelete_action_title" = "Anuluj";
 "edit_action_title" = "Edytuj";
 
-//MARK: Edit Screen
+//MARK: - Edit Screen
+
 "edit_screen_name" = "Edycja nawyku";
 "save_button_title" = "Zachować";

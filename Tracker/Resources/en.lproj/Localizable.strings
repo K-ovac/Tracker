@@ -6,29 +6,29 @@
   
 */
 
-//MARK: ALL
+//MARK: - General
 "completeButton" = "Done";
 
-//MARK: Onboard
+//MARK: - Onboard
 "onboard_1_label" = "Track only what you want";
 "onboard_2_label" = "Even if it's not liters of water and yoga";
 "startButton" = "These are the technologies!";
 
-//MARK: Tracker
+//MARK: - Tracker
 "trackers_screen_name" = "Trackers";
 "trackersScreen_placeholderText" = "What are we going to track?";
 "trackersScreen_placeholderTextForNotFound" = "Nothing was found";
 "searchField_placeholder" = "Search";
-"filtresButton" = "Filters";
+"filtersButton" = "Filters";
 
-//MARK: Filters
+//MARK: - Filters
 "filters_screen_name" = "Filters";
 "allTrackers" = "All trackers";
 "todayTrackers" = "Trackers today";
 "completedTrackers" = "Completed";
 "notCompletedTrackers" = "Not completed";
 
-//MARK: New TRacker
+//MARK: - New Tracker
 "newTracker_navigationTitle" = "New habit";
 "nameTracker_textField_placeholder" = "Enter the name of the tracker";
 "name_limitLabel" = "The limit is 38 characters";
@@ -38,18 +38,18 @@
 "colorHeader" = "Colors";
 "cancelButton" = "Cancel";
 "createButton" = "Create";
-"subLable_allDay" = "Every day";
+"subLabel_allDay" = "Every day";
 
-//MARK: Category
+//MARK: - Category
 "category_navigationTitle" = "Category";
-"caregoryScreen_placeholderText" = "Habits and events can be\ncombined in meaning.";
+"categoryScreen_placeholderText" = "Habits and events can be\ncombined in meaning.";
 "addCategoryButton" = "Add category";
 
-//MARK: New Category
+//MARK: - New Category
 "newCategory_navigationTitle" = "New category";
 "nameCategory_textField_placeholder" = "Enter the category name";
 
-//MARK: Schedule
+//MARK: - Schedule
 "schedule_navigationTitle" = "Schedule";
 
 //full name day
@@ -70,7 +70,7 @@
 "sat" = "Sat";
 "sun" = "Sun";
 
-//MARK: Stats Screen
+//MARK: - Stats Screen
 "stats_screen_name" = "Statistics";
 "statsScreen_placeholderText" = "There is nothing to analyze yet";
 "bestPeriod" = "The best period";
@@ -78,12 +78,12 @@
 "trackersCompleted" = "Trackers completed";
 "avgScore" = "The average value";
 
-//MARK: Context menu
+//MARK: - Context menu
 "delete_alert_title" = "Are you sure you want to delete the tracker?";
 "delete_action_title" = "Delete";
 "cancelDelete_action_title" = "Cancel";
 "edit_action_title" = "Edit";
 
-//MARK: Edit Screen
+//MARK: - Edit Screen
 "edit_screen_name" = "Edit habit";
 "save_button_title" = "Save";

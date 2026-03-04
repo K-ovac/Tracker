@@ -327,7 +327,7 @@ class NewTrackerViewController: UIViewController {
         }
         
         let text = selectedWeekdays.count == 7
-        ? L10n.subLableAllDay
+        ? L10n.subLabelAllDay
         : selectedWeekdays.sorted { $0.rawValue < $1.rawValue }
             .map { $0.shortTitle }
             .joined(separator: ", ")

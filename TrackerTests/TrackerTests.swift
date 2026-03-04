@@ -11,6 +11,7 @@ import SnapshotTesting
 
 //Тестировал на симуляторе Iphone 16e ios 18.5
 final class TrackerSnapshotTests: XCTestCase {
+    
     // MARK: - Light Theme test
     func testTrackerViewController_lightTheme() {
         let vc = setupMainViewController()
@@ -36,6 +37,9 @@ final class TrackerSnapshotTests: XCTestCase {
     }
         
     private func setupMainViewController() -> TabBarController {
-        TabBarController()
+        let vc = TabBarController()
+        vc.loadViewIfNeeded()
+        
+        return vc
     }
 }

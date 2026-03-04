@@ -17,7 +17,7 @@ final class TrackerView: UIView {
     weak var delegate: TrackerViewDelegate?
     // MARK: - UI
     lazy var filtersButton = makeFiltersButton(
-        title: L10n.filtresButton,
+        title: L10n.filtersButton,
         tintColor: Colors.filtersButtonTint,
         bckgColor: Colors.filtersButtonBackground,
         titleSize: 17,

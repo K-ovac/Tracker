@@ -7,6 +7,11 @@
 
 import UIKit
 
+private enum Assets {
+    static let tracker = "trackerTabBarItem"
+    static let statistics = "statisticsTabBarItem"
+}
+
 final class TabBarController: UITabBarController {
     
     // MARK: - Lifecycle
@@ -33,9 +38,9 @@ final class TabBarController: UITabBarController {
     
     //MARK: - Setup TabBar
     private func setupTabBar() {
-        let trackerIcon = UIImage(named: "trackerTabBarItem")?
+        let trackerIcon = UIImage(named: Assets.tracker)?
             .withRenderingMode(.alwaysTemplate)
-        let statisticsIcon = UIImage(named: "statisticsTabBarItem")?
+        let statisticsIcon = UIImage(named: Assets.statistics)?
             .withRenderingMode(.alwaysTemplate)
         
         let trackerVC = TrackerViewController()

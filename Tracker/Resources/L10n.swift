@@ -17,7 +17,7 @@ enum L10n {
     static let trackersScreenPlaceholderText = NSLocalizedString("trackersScreen_placeholderText", comment: "")
     static let trackersScreenPlaceholderTextForNotFound = NSLocalizedString("trackersScreenPlaceholderTextForNotFound", comment: "")
     static let searchFieldPlaceholder = NSLocalizedString("searchField_placeholder", comment: "")
-    static let filtresButton = NSLocalizedString("filtresButton", comment: "")
+    static let filtersButton = NSLocalizedString("filtersButton", comment: "")
     
     static let filtersScreenName = NSLocalizedString("filters_screen_name", comment: "")
     static let allTrackers = NSLocalizedString("allTrackers", comment: "")
@@ -34,10 +34,10 @@ enum L10n {
     static let colorHeader = NSLocalizedString("colorHeader", comment: "")
     static let cancelButton = NSLocalizedString("cancelButton", comment: "")
     static let createButton = NSLocalizedString("createButton", comment: "")
-    static let subLableAllDay = NSLocalizedString("subLable_allDay", comment: "")
+    static let subLabelAllDay = NSLocalizedString("subLabel_allDay", comment: "")
     
     static let categoryNavigationTitle = NSLocalizedString("category_navigationTitle", comment: "")
-    static let caregoryScreenPlaceholderText = NSLocalizedString("caregoryScreen_placeholderText", comment: "")
+    static let categoryScreenPlaceholderText = NSLocalizedString("categoryScreen_placeholderText", comment: "")
     static let addCategoryButton = NSLocalizedString("addCategoryButton", comment: "")
     static let newCategoryNavigationTitle = NSLocalizedString("newCategory_navigationTitle", comment: "")
     static let nameCategoryTextFieldPlaceholder = NSLocalizedString("nameCategory_textField_placeholder", comment: "")
